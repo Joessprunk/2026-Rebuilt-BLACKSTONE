@@ -78,7 +78,7 @@ public class PoseEstimator extends SubsystemBase {
     public void resetHeading() {
         poseEstimator.resetPosition(swerveDrive.getHeading(), swerveDrive.getModulePositions(), 
         new Pose2d(poseEstimator.getEstimatedPosition().getTranslation(), Rotation2d.fromDegrees(0)));
-        // TODO: change based on field mirroring
+        // change based on field mirroring
         // DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180)));
     }
     

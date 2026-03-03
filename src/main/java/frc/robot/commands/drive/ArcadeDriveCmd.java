@@ -81,7 +81,7 @@ public class ArcadeDriveCmd extends Command {
             rot = Math.copySign(Math.pow(rot, 2.0), rot);
         }
 
-        // TODO modify as necessary based on field mirroring or roation
+        // modify as necessary based on field mirroring or roation
         if(DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
             swerve.driveFieldRelative(
                 drive * SwerveDriveConstants.maxAttainableSpeedMetersPerSec,

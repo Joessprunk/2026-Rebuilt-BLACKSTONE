@@ -6,8 +6,8 @@ package frc.robot;
 
 import com.pathplanner.lib.config.ModuleConfig;
 
-// FIXME: uncomment once pathplannerlib is released
-// import com.pathplanner.lib.config.ModuleConfig;
+// uncomment once pathplannerlib is released
+import com.pathplanner.lib.config.ModuleConfig;
 
 import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -32,13 +32,13 @@ import edu.wpi.first.math.util.Units;
  */
 public final class Constants {
     public static class RobotConstants {
-        // TODO: Set to the current the weight of the robot, including the battery and
+        // Set to the current the weight of the robot, including the battery and
         // bumpers.
-        public static final double massKg = 52.41;
+        public static final double massKg = 52.16;
 
-        // TODO: Set the frame dimensions of the robot.
-        public static final double robotWidthMeters = Units.inchesToMeters(25.0);
-        public static final double robotLengthMeters = Units.inchesToMeters(25.0);
+        // Set the frame dimensions of the robot.
+        public static final double robotWidthMeters = Units.inchesToMeters(27.0);
+        public static final double robotLengthMeters = Units.inchesToMeters(27.0);
 
         // Moment of inertia of a uniform-mass slab with the axis of rotation centered
         // and perpendicular to the slab
@@ -51,7 +51,7 @@ public final class Constants {
         public static final int kDriverControllerPort = 0;
         public static final int kOperatorControllerPort = 1;
 
-        // TODO: change deadband based on controller drift
+        // change deadband based on controller drift
         public static final double joystickDeadband = 0.08;
         public static final double tiggerPressedThreshold = 0.35;
     }
@@ -93,7 +93,7 @@ public final class Constants {
     }
 
     public static class SwerveModuleConstants {
-        // TODO: Tune the below PID and FF values using the SysID routines.
+        // Tune the below PID and FF values using the SysID routines.
         public static final double driveKp = 0.18;
         public static final double driveKd = 0.0;
 
@@ -107,16 +107,15 @@ public final class Constants {
         public static final SimpleMotorFeedforward driveFF = new SimpleMotorFeedforward(driveKsVolts,
                 driveKvVoltSecsPerMeter, driveKaVoldSecsPerMeterSq);
 
-        // TODO: Change this value depending on your breakers and the current usage of
+        // Change this value depending on your breakers and the current usage of
         // the rest of your robot.
         public static final int driveMtrCurrentLimitAmps = 60;
         public static final int steerMtrCurrentLimitAmps = 40;
 
-        // TODO: Change this number based on actual wheel diamter.
+        // Change this number based on actual wheel diamter.
         public static final double wheelRadiusMeters = Units.inchesToMeters(1.9);
 
-        // TODO: Set this value to the coefficient of friction of your wheels.
-        // FIXME: Do we need this value?
+        // Set this value to the coefficient of friction of your wheels.
         public static final double wheelCoefficientOfFriction = 1.5;
 
         public static final double driveGearReduction = (16.0 / 54.0) * (32.0 / 25.0) * (15.0 / 30.0);
@@ -141,7 +140,7 @@ public final class Constants {
         public static final double driveStallCurrentAmps = 211.0;
         public static final double driveFreeCurrentAmps = 3.6;
 
-        // FIXME: uncomment once pathplannerlib is released
+        // uncomment once pathplannerlib is released
         public static final ModuleConfig moduleConfig = new ModuleConfig(
                 wheelRadiusMeters, SwerveDriveConstants.maxAttainableSpeedMetersPerSec, wheelCoefficientOfFriction,
                 new DCMotor(driveNominalOperatingVoltage, driveStallTorqueNewtonMeters, driveStallCurrentAmps,
@@ -150,7 +149,7 @@ public final class Constants {
     }
 
     public static class SwerveDriveConstants {
-        // TODO: set these offsets based on module's zero position
+        // set these offsets based on module's zero position
         public static final Rotation2d flModuleOffset = Rotation2d.fromDegrees(-109.5); // 162.5
         public static final Rotation2d frModuleOffset = Rotation2d.fromDegrees(57.4); // 122.0
         public static final Rotation2d blModuleOffset = Rotation2d.fromDegrees(106.1); // -151.6
@@ -170,17 +169,17 @@ public final class Constants {
                 new Translation2d(-chassisTrackWidthMeters / 2.0, -chassisTrackLengthMeters / 2.0) // back right
         );
 
-        // TODO: Tune these values based on actual robot performaance.
+        // Tune these values based on actual robot performaance.
         public static final double maxAttainableSpeedMetersPerSec = Units.feetToMeters(16.5);
-        public static final double maxAttainableRotationRadPerSec = 5.0;
+        public static final double maxAttainableRotationRadPerSec = 5.5;
 
         public static final double skewCompensationRatioOmegaPerTheta = 0.1;
 
-        // TODO: Tune the below PID values using the SysID routines.
-        public static final double autoTranslationKp = 6.0;
+        // Tune the below PID values
+        public static final double autoTranslationKp = 5.0;
         public static final double autoTranslationKd = 0.0;
 
-        public static final double autoRotationKp = 8.0;
+        public static final double autoRotationKp = 6.0;
         public static final double autoRotationKd = 0.0;
 
         public static final double autoAimkP = 10.9;
@@ -201,7 +200,7 @@ public final class Constants {
         public static final double visionTranslationStdDevMeters = 0.35;
         public static final double visionRotationStdDevRad = Units.degreesToRadians(30.0);
 
-        public static final double angularVelocityDegPerSecThreshold = 360.0;
+        public static final double angularVelocityDegPerSecThreshold = 120.0;
     }
 
     public class IntakeConstants {
@@ -260,6 +259,7 @@ public final class Constants {
         public static final double minimumAizmuthAngleDeg = -90.0;
         public static final double azimuthErrorTolerance = 5;
         public static final double azimuthDefaultSetpointDeg = 0.0;
+        public static final double azimuthOffsetDegIncrement = 1.0;
 
         public static final double azimuthPositionConversionFactorRadPerRot = 20.0 / 173.0 / 5.0 * 2.0 * Math.PI;
         public static final double azimuthVelocityConversionFactorRadPerRotPerSec = 20.0 / 173.0 * 2.0 * Math.PI;
@@ -275,6 +275,9 @@ public final class Constants {
 
         public static final Pose2d targetPoseBlue = new Pose2d(4.62, 4.04, null);
         public static final Pose2d targetPoseRed = new Pose2d(11.915, 4.035, null);
+
+        public static final Pose2d passingPoseBlue = new Pose2d(2.0, 7.0, null);
+        public static final Pose2d passingPoseRed = new Pose2d(2.0, 14.0, null);
 
         public static final double turretOffsetXInches = -1.5; // -5.75
         public static final double turretOffsetYInches = -5.75; // 1.5
@@ -331,14 +334,16 @@ public final class Constants {
         public static final int maxTowerCurrentAmps = 50;
         public static final int maxSpindexerCurrentAmps = 50;
 
-        public static final double towerP = 0.00015;
-        public static final double towerD = 0.00;
+        public static final double towerP = 0.00025;
+        public static final double towerD = 0.05;
+        public static final double towerkS = 0.5;
+        public static final double towerkV = 0.002;
 
         public static final double spindexerP = 0.005;
         public static final double spindexerD = 0.0005;
 
-        public static final double towerPositionConversionFactor = 1.0;
-        public static final double towerVelocityConversionFactor = 1.0 / 60.0;
+        public static final double towerPositionConversionFactor = 18.0 / 24.0;
+        public static final double towerVelocityConversionFactor = 18.0 / 24.0;
 
         public static final double spindexerPositionConversionFactor = 1.0 / 15.0;
         public static final double spindexerVelocityConversionFactor = 1.0 / 15.0;

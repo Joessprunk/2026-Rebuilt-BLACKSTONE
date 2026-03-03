@@ -67,7 +67,9 @@ public class IndexerSys extends SubsystemBase {
 
     towerSparkFlexConfig.closedLoop
       .p(IndexerConstants.towerP)
-      .d(IndexerConstants.towerD);
+      .d(IndexerConstants.towerD)
+      .feedForward.kS(IndexerConstants.towerkS)
+      .kV(IndexerConstants.towerkV);
 
     spindexerSparkFlexConfig.closedLoop
       .p(IndexerConstants.spindexerP)

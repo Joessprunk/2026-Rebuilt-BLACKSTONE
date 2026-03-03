@@ -151,9 +151,6 @@ public class ClimberSys extends SubsystemBase {
   public void periodic() {
     LeftElevatorMtr.set(LeftElevatorPID.calculate(getClimberPosition()));
     RightElevatorMtr.set(RightElevatorPID.calculate(getClimberPosition()));
-    
-    // currently the control remains within the following methods, but this
-    // can be changed to allow for more complex control logic if desired
   }
 
   // public void setState(ElevatorState newState) {
@@ -190,32 +187,30 @@ public class ClimberSys extends SubsystemBase {
   //   setState(states[prevIndex]);
   // }
 
-  public ElevatorState getCurrentState() {
-    return currentState;
-  }
+  // public ElevatorState getCurrentState() {
+  //   return currentState;
+  // }
 
   // public void setClimberPosition(double targetPos) {
   //   LeftElevatorPID.setSetpoint(targetPos, ControlType.kPosition);
   //   RightElevatorPID.setSetpoint(targetPos, ControlType.kPosition);
   // }
   public void setClimberPosition(double targetpos){
-   LeftElevatorPID.setGoal(targetpos);
-   RightElevatorPID.setGoal(targetpos);
+    LeftElevatorPID.setGoal(targetpos);
+    RightElevatorPID.setGoal(targetpos);
   }
   
-  
-
   public double getClimberPosition() {
     return (LeftElevatorEnc.getPosition() + RightElevatorEnc.getPosition()) / 2.0;
   }
 
-  public void setTargetHookPosition(double targetPosition) {
-    HookPID.setSetpoint(targetPosition, ControlType.kPosition);
-  }
+  // public void setTargetHookPosition(double targetPosition) {
+  //   HookPID.setSetpoint(targetPosition, ControlType.kPosition);
+  // }
 
-  public double getHookPosition() {
-    return HookEnc.getPosition();
-  }
+  // public double getHookPosition() {
+  //   return HookEnc.getPosition();
+  // }
 
   // public void manualClimberPosition(double speed) {
   // LeftElevatorMtr.set(speed);

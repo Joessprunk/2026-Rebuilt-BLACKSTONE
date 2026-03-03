@@ -14,7 +14,9 @@ import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
 import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
+import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.intake.SetIntakeActuatorInches;
+import frc.robot.commands.intake.SetIntakeRollerRPM;
 import frc.robot.commands.spindexer.SetSpindexerRPM;
 import frc.robot.commands.tower.SetTowerRPM;
 
@@ -28,8 +30,9 @@ public class StartShooting extends SequentialCommandGroup {
         new WaitUntilCommand(() -> turretSys.isOnTarget()),
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
         new SetTowerRPM(indexerSys, IndexerConstants.towerShootingRPM),
-        new SetSpindexerRPM(indexerSys, IndexerConstants.spindexerAgitatingRPM));
-  //       new WaitCommand(2.0),
-  //       new SetIntakeActuatorInches(intakeSys, Constants.IntakeConstants.actuatorInPositionInches));
+        new SetSpindexerRPM(indexerSys, IndexerConstants.spindexerAgitatingRPM),
+        new SetIntakeRollerRPM(intakeSys, IntakeConstants.intakingRollerRPM),
+        new WaitCommand(2.0),
+        new SetIntakeActuatorInches(intakeSys, Constants.IntakeConstants.actuatorInPositionInches));
   }
 }

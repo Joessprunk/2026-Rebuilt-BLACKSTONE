@@ -5,14 +5,13 @@
 package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants;
 import frc.robot.subsystems.ClimberSys;
 
 /** An example command that uses an example subsystem. */
 public class SetHookPosition extends Command {
   @SuppressWarnings({"unused", "PMD.UnusedPrivateField", "PMD.SingularField"})
   private final ClimberSys climberSys;
-  private final double targethookPositionDeg;
+  // private final double targethookPositionDeg;
 
   /**
    * Creates a new ExampleCommand.
@@ -21,7 +20,7 @@ public class SetHookPosition extends Command {
    */
   public SetHookPosition(ClimberSys climberSys, double targethookPositionDeg) {
     this.climberSys = climberSys;
-    this.targethookPositionDeg = targethookPositionDeg;
+    // this.targethookPositionDeg = targethookPositionDeg;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(climberSys);
   }
@@ -29,7 +28,7 @@ public class SetHookPosition extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    climberSys.setTargetHookPosition(targethookPositionDeg);
+    // climberSys.setTargetHookPosition(targethookPositionDeg);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

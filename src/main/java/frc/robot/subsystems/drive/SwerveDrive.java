@@ -77,7 +77,7 @@ public class SwerveDrive extends SubsystemBase {
 
         pigeon = new Pigeon2(CANDevices.pigeonID);
 
-        // TODO Modify this to reflect how the Pigeon is mounted
+        // Modify this to reflect how the Pigeon is mounted
         // Pigeon is mounted upside down
         pigeon.getConfigurator().apply(new MountPoseConfigs().withMountPoseRoll(180.0));
 
@@ -193,7 +193,7 @@ public class SwerveDrive extends SubsystemBase {
     public double getRobotVelocity() {
         return Math.hypot(SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vxMetersPerSecond, SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vyMetersPerSecond);
     }
-    
+
     public void driveFieldRelative(double xMetersPerSec, double yMetersPerSec, double omegaRadPerSec, Rotation2d heading) {
         if(omegaOverrideRadPerSec.isPresent()) {
             omegaRadPerSec = omegaOverrideRadPerSec.get();
@@ -253,7 +253,7 @@ public class SwerveDrive extends SubsystemBase {
         double thetaRad = Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond);
         double velMetersPerSec = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
         
-        // TODO: made sure this functions as intended
+        // made sure this functions as intended
         if (DriverStation.isAutonomous()) {
             skewCompensationThetaShift = Rotation2d.fromRadians(omegaRadPerSec * 0.0);
         } else {
