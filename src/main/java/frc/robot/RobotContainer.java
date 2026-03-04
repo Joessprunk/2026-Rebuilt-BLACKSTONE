@@ -168,7 +168,7 @@ public class RobotContainer {
 		operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
 		operatorController.povLeft().onTrue(new IncrementAzimuthOffset(turretSys));
 		operatorController.povRight().onTrue(new DecrementAzimuthOffset(turretSys));
-		operatorController.rightStick().onTrue(new ToggleIsPassing(turretSys));
+		operatorController.start().onTrue(new ToggleIsPassing(turretSys));
 		operatorController.a().onTrue(new SetClimberPositon(climberSys, 0.0));
 		operatorController.b().onTrue(new SetClimberPositon(climberSys, 3.5));
 		operatorController.y().onTrue(new SetClimberPositon(climberSys, ClimberConstants.ElevatorMaxInches));
