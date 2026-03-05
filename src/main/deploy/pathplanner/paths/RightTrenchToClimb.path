@@ -72,17 +72,6 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "StartShooting",
-      "waypointRelativePos": 0,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "StartShooting"
-        }
-      }
-    },
-    {
       "name": "ClimberUp",
       "waypointRelativePos": 0.1,
       "endWaypointRelativePos": null,
@@ -90,6 +79,17 @@
         "type": "named",
         "data": {
           "name": "ClimberUp"
+        }
+      }
+    },
+    {
+      "name": "StartShooting",
+      "waypointRelativePos": 0.6761904761904785,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StartShooting"
         }
       }
     }

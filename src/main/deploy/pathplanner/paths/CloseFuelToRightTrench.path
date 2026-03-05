@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.126416414141414,
-        "y": 0.7081573232323222
+        "x": 5.992193181818181,
+        "y": 0.4894545454545458
       },
       "isLocked": false,
       "linkedName": "RightCloseFuel"
@@ -20,8 +20,8 @@
         "y": 0.6327193181804922
       },
       "prevControl": {
-        "x": 5.578818181818182,
-        "y": 0.6989238636350378
+        "x": 6.363238636363636,
+        "y": 0.63375
       },
       "nextControl": null,
       "isLocked": false,

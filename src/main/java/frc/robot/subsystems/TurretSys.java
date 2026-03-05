@@ -96,8 +96,8 @@ public class TurretSys extends SubsystemBase {
     rightFlyWheelMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxFlyWheelCurrentAmps);
 
     azimuthMtrSparkFlexConfig.voltageCompensation(12);
-    leftFlyWheelMtrSparkFlexConfig.voltageCompensation(12);
-    rightFlyWheelMtrSparkFlexConfig.voltageCompensation(12);
+    leftFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
+    rightFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
 
     azimuthMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
     azimuthMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);

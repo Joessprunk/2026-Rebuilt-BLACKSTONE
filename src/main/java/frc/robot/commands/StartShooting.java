@@ -33,7 +33,7 @@ public class StartShooting extends SequentialCommandGroup {
         new SetSpindexerRPM(indexerSys, IndexerConstants.spindexerAgitatingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.intakingRollerRPM),
         new WaitCommand(1.0),
-        new SetIntakeActuatorInches(intakeSys, Constants.IntakeConstants.actuatorBufferPositionInches)
+        new SetIntakeActuatorInches(intakeSys, Constants.IntakeConstants.actuatorInPositionInches)
     );
   }
 }

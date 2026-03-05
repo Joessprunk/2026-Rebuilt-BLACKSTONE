@@ -227,10 +227,10 @@ public class RobotContainer {
 		// operatorController.x().onTrue(new SetIntakeRollerRPM(intakeSys, 1600.0));
 		// operatorController.y().onTrue(new SetIntakeRollerRPM(intakeSys, 500.0));
 
-		// intake actuator position control bindings for testing
-		operatorController.b().onTrue(new SetIntakeActuatorInches(intakeSys, 8.0));
-		operatorController.x().onTrue(new SetIntakeActuatorInches(intakeSys, 0.0));
-		operatorController.y().onTrue(new SetIntakeActuatorInches(intakeSys,12.0));
+		// // intake actuator position control bindings for testing
+		// operatorController.b().onTrue(new SetIntakeActuatorInches(intakeSys, 8.0));
+		// operatorController.x().onTrue(new SetIntakeActuatorInches(intakeSys, 0.0));
+		// operatorController.y().onTrue(new SetIntakeActuatorInches(intakeSys,12.0));
 
 		// climber position control bindings for testing
 		// operatorController.a().onTrue(new SetClimberPositon(climberSys, 0.0));
