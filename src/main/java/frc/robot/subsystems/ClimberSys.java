@@ -200,9 +200,7 @@ public class ClimberSys extends SubsystemBase {
     RightElevatorPID.setGoal(targetpos);
   }
   
-  public double getClimberPosition() {
-    return (LeftElevatorEnc.getPosition() + RightElevatorEnc.getPosition()) / 2.0;
-  }
+  
 
   // public void setTargetHookPosition(double targetPosition) {
   //   HookPID.setSetpoint(targetPosition, ControlType.kPosition);
