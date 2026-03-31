@@ -15,10 +15,10 @@ import frc.robot.subsystems.TurretSys;
 import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
-import frc.robot.commands.intake.SetIntakeActuatorInches;
+import frc.robot.commands.indexer.SetFloorRollerRPM;
+import frc.robot.commands.indexer.SetTowerRollerRPM;
+import frc.robot.commands.intake.SetTargetPivotAngle;
 import frc.robot.commands.intake.SetIntakeRollerRPM;
-import frc.robot.commands.spindexer.SetSpindexerRPM;
-import frc.robot.commands.tower.SetTowerRPM;
 
 /** An example command that uses an example subsystem. */
 public class StartShootingAuto extends SequentialCommandGroup {
@@ -27,13 +27,13 @@ public class StartShootingAuto extends SequentialCommandGroup {
     super(
         new StartAiming(turretSys),
         new StartFlywheel(turretSys),
-        new WaitUntilCommand(() -> turretSys.isOnTarget()),
+      //  new WaitUntilCommand(() -> turretSys.isOnTarget()),
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
-        new SetTowerRPM(indexerSys, IndexerConstants.towerShootingRPM),
-        new SetSpindexerRPM(indexerSys, IndexerConstants.spindexerAgitatingRPM),
-        new SetIntakeRollerRPM(intakeSys, IntakeConstants.agitatingRollerRPM),
+         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
+        new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
+        new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
         new WaitCommand(1.0),
-        new SetIntakeActuatorInches(intakeSys, Constants.IntakeConstants.actuatorSafePositionInches)
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
     );
   }
 }

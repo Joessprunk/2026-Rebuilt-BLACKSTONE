@@ -4,7 +4,7 @@
 
 package frc.robot;
 
-import frc.robot.Constants.ClimberConstants;
+
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -14,22 +14,20 @@ import frc.robot.commands.StartIntaking;
 import frc.robot.commands.StartShooting;
 import frc.robot.commands.StartShootingAuto;
 import frc.robot.commands.StopShooting;
-import frc.robot.commands.climber.SetClimberPositon;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.LockCmd;
-import frc.robot.commands.intake.ResetIntakeActuatorInches;
-import frc.robot.commands.intake.SetIntakeActuatorInches;
+import frc.robot.commands.indexer.SetFloorRollerRPM;
+import frc.robot.commands.indexer.SetTowerRollerRPM;
+import frc.robot.commands.intake.ResetPivotAngle;
+import frc.robot.commands.intake.SetTargetPivotAngle;
 import frc.robot.commands.intake.SetIntakeRollerRPM;
-import frc.robot.commands.spindexer.SetSpindexerRPM;
-import frc.robot.commands.tower.SetTowerRPM;
-import frc.robot.commands.turret.DecrementAzimuthOffset;
+import frc.robot.commands.turret.DecrementHoodOffset;
 import frc.robot.commands.turret.DecrementFlywheelOffset;
-import frc.robot.commands.turret.IncrementAzimuthOffset;
+import frc.robot.commands.turret.IncrementHoodOffset;
 import frc.robot.commands.turret.IncrementFlywheelOffset;
 import frc.robot.commands.turret.SetManualFlywheelRPM;
 import frc.robot.commands.turret.StopManualFlywheelRPM;
 import frc.robot.commands.turret.ToggleIsPassing;
-import frc.robot.subsystems.ClimberSys;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
@@ -70,7 +68,6 @@ public class RobotContainer {
 	private final IntakeSys intakeSys = new IntakeSys();
 	private final IndexerSys indexerSys = new IndexerSys();
 	private final TurretSys turretSys = new TurretSys(poseEstimator);
-	private final ClimberSys climberSys = new ClimberSys();
 
 	private final CommandXboxController driverController = new CommandXboxController(
 			ControllerConstants.kDriverControllerPort);
@@ -86,10 +83,6 @@ public class RobotContainer {
 		NamedCommands.registerCommand("StartIntaking", new StartIntaking(intakeSys, indexerSys));
 		NamedCommands.registerCommand("StartShooting", new StartShootingAuto(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("StopShooting", new StopShooting(turretSys, indexerSys, intakeSys));
-		NamedCommands.registerCommand("ClimberUp",
-				new SetClimberPositon(climberSys, ClimberConstants.ElevatorUpPositionInches));
-		NamedCommands.registerCommand("ClimberDown",
-				new SetClimberPositon(climberSys, ClimberConstants.elevatorClimbPositionInches));
 
 		// configure autobuilder
 		try {
@@ -161,24 +154,21 @@ public class RobotContainer {
 		// operator bindings for competition
 		operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
 		operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
-		operatorController.povLeft().onTrue(new IncrementAzimuthOffset(turretSys));
-		operatorController.povRight().onTrue(new DecrementAzimuthOffset(turretSys));
+		operatorController.povLeft().onTrue(new IncrementHoodOffset(turretSys));
+		operatorController.povRight().onTrue(new DecrementHoodOffset(turretSys));
 		operatorController.start().onTrue(new ToggleIsPassing(turretSys));
-		operatorController.a().onTrue(new SetClimberPositon(climberSys, 0.0));
-		operatorController.b().onTrue(new SetClimberPositon(climberSys, ClimberConstants.elevatorClimbPositionInches));
-		operatorController.y().onTrue(new SetClimberPositon(climberSys, ClimberConstants.ElevatorUpPositionInches));
-		operatorController.leftStick().onTrue(new ResetIntakeActuatorInches(intakeSys));
-		operatorController.rightBumper().onTrue(new SetIntakeActuatorInches(intakeSys, 0.0));
-		operatorController.leftBumper().onTrue(new SetIntakeActuatorInches(intakeSys, 12.0));
+		operatorController.leftStick().onTrue(new ResetPivotAngle(intakeSys));
+		operatorController.rightBumper().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+		operatorController.leftBumper().onTrue(new SetTargetPivotAngle(intakeSys, 12.0));
 
 		operatorController
 				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
-				.onTrue(new SetTowerRPM(indexerSys, IndexerConstants.towerShootingRPM))
-				.onTrue(new SetSpindexerRPM(indexerSys, IndexerConstants.spindexerAgitatingRPM))
+				.onTrue(new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM))
+				.onTrue(new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM))
 				.onTrue(new SetManualFlywheelRPM(turretSys, 3500.0))
 				.onFalse(new SetIntakeRollerRPM(intakeSys, 0))
-				.onFalse(new SetSpindexerRPM(indexerSys, 0))
-				.onFalse(new SetTowerRPM(indexerSys, 0))
+				.onFalse(new SetFloorRollerRPM(indexerSys, 0))
+				.onFalse(new SetTowerRollerRPM(indexerSys, 0))
 				.onFalse(new StopManualFlywheelRPM(turretSys));
 
 		// operatorController.b().onTrue(new StopManualFlywheelRPM(turretSys));
@@ -283,15 +273,14 @@ public class RobotContainer {
 		// turret azimuth info
 		// SmartDashboard.putNumber("manual azimuth angle rads",
 		// turretSys.getAzimuthManualTargetDeg());
-		SmartDashboard.putNumber("current azimuth angle rad", turretSys.getCurrentAzimuthAngleRad());
+		
 		SmartDashboard.putNumber("target azimuth angle rad", turretSys.calculateTargetAzimuthAngleShooting());
-		SmartDashboard.putBoolean("on target", turretSys.isOnTarget());
 		SmartDashboard.putNumberArray("turret pose", new double[] {
 				turretSys.getTurretPose().getTranslation().getX(),
 				turretSys.getTurretPose().getTranslation().getY() });
 		SmartDashboard.putBoolean("is Aiming", turretSys.getIsAiming());
 		SmartDashboard.putBoolean("is Passing", turretSys.getIsPassing());
-		SmartDashboard.putNumber("azimuth offset deg", turretSys.getAzimuthOffsetDeg());
+		
 
 		// turret flywheel
 		SmartDashboard.putNumber("flywheel current RPM", turretSys.getFlywheelRPM());
@@ -303,15 +292,15 @@ public class RobotContainer {
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
 
 		// indexer info
-		SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRPM());
-		SmartDashboard.putNumber("spindexer RPM", indexerSys.getSpindexerRPM());
+		SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
+		SmartDashboard.putNumber("spindexer RPM", indexerSys.getFloorRollerRPM());
 
 		// intake info
-		SmartDashboard.putNumber("actuator position inches", intakeSys.getActuatorPositionInches());
+		SmartDashboard.putNumber("actuator position inches", intakeSys.getPivotAngle());
 		SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
 
 		// climber info
-		SmartDashboard.putNumber("climber extension inches", climberSys.getClimberPosition());
+		
 
 		// field
 		SmartDashboard.putData("robot field", poseEstimator.getField());

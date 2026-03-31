@@ -8,13 +8,12 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSys;
 
 /** An example command that uses an example subsystem. */
-public class SetManualAzimuthAngle extends Command {
+public class StopManualHoodAngle extends Command {
   
   private final TurretSys turretSys;
-  private double manualAzimuthAngle;
-  public SetManualAzimuthAngle(TurretSys turretSys, double manualAzimuthAngle) {
+
+  public StopManualHoodAngle(TurretSys turretSys) {
     this.turretSys = turretSys;
-    this.manualAzimuthAngle = manualAzimuthAngle;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turretSys);
   }
@@ -22,7 +21,7 @@ public class SetManualAzimuthAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turretSys.setManualAzimuthAngle(manualAzimuthAngle);
+    turretSys.setManualHoodAngle(null);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

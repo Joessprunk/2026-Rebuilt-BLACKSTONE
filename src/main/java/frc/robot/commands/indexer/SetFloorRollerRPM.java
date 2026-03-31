@@ -2,26 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.turret;
+package frc.robot.commands.indexer;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.TurretSys;
+import frc.robot.subsystems.IndexerSys;
 
 /** An example command that uses an example subsystem. */
-public class DecrementAzimuthOffset extends Command {
+public class SetFloorRollerRPM extends Command {
   
-  private final TurretSys turretSys;
-
-  public DecrementAzimuthOffset(TurretSys turretSys) {
-    this.turretSys = turretSys;
+  private final IndexerSys indexerSys;
+  private double targetRPM;
+  public SetFloorRollerRPM(IndexerSys indexerSys, double targetRPM) {
+    this.indexerSys = indexerSys;
+    this.targetRPM = targetRPM;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(turretSys);
+    addRequirements(indexerSys);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turretSys.decrementAzimuthOffsetDeg();
+    indexerSys.setTargetFloorRollerRPM(targetRPM);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

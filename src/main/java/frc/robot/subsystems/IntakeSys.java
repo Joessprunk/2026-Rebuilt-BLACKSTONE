@@ -19,136 +19,137 @@ import frc.robot.Constants.IntakeConstants;
 
 public class IntakeSys extends SubsystemBase {
 
-  private final SparkFlex rollerMtr;
-  private final SparkFlex leftActuatorMtr;
-  private final SparkFlex rightActuatorMtr;
+  private final SparkFlex leftRollerMtr;
+  private final SparkFlex intakePivotMtr;
+  private final SparkFlex rightRollerMtr;
 
-  private final RelativeEncoder leftActuatorEnc;
-  private final RelativeEncoder rightActuatorEnc;
-  private final RelativeEncoder rollerEnc;
+  private final RelativeEncoder leftRollerEnc;
+  private final RelativeEncoder rightRollerEnc;
+  private final RelativeEncoder intakePivotEnc;
 
-  private final SparkClosedLoopController rollerPID;
-  private final SparkClosedLoopController LeftActuatorPID;
-  private final SparkClosedLoopController RightActuatorPID;
+  private final SparkClosedLoopController intakePivotPID;
+  private final SparkClosedLoopController leftRollerPID;
+  private final SparkClosedLoopController rightRollerPID;
 
-  private double targetRollerRPM;
+ 
 
   @SuppressWarnings("removal")
   public IntakeSys() {
-    rollerMtr = new SparkFlex(CANDevices.RollerMtrID, MotorType.kBrushless);
-    SparkFlexConfig RollerMtrSparkFlexConfig = new SparkFlexConfig();
-    rollerPID = rollerMtr.getClosedLoopController();
-    rollerEnc = rollerMtr.getEncoder();
+    intakePivotMtr = new SparkFlex(CANDevices.intakePivotMtrID, MotorType.kBrushless);
+    SparkFlexConfig intakePivotMtrSparkFlexConfig = new SparkFlexConfig();
+    intakePivotPID = intakePivotMtr.getClosedLoopController();
+    intakePivotEnc = intakePivotMtr.getEncoder();
 
-    leftActuatorMtr = new SparkFlex(CANDevices.LeftActuatorMtrID, MotorType.kBrushless);
-    SparkFlexConfig LeftActuatorMtrSparkFlexConfig = new SparkFlexConfig();
-    LeftActuatorPID = leftActuatorMtr.getClosedLoopController();
-    leftActuatorEnc = leftActuatorMtr.getEncoder();
+    leftRollerMtr = new SparkFlex(CANDevices.leftRollerMtrID, MotorType.kBrushless);
+    SparkFlexConfig leftRollerMtrSparkFlexConfig = new SparkFlexConfig();
+    leftRollerPID = leftRollerMtr.getClosedLoopController();
+    leftRollerEnc = leftRollerMtr.getEncoder();
 
-    rightActuatorMtr = new SparkFlex(CANDevices.RightActuatorMtrID, MotorType.kBrushless);
-    SparkFlexConfig RightActuatorMtrSparkFlexConfig = new SparkFlexConfig();
-    RightActuatorPID = rightActuatorMtr.getClosedLoopController();
-    rightActuatorEnc = rightActuatorMtr.getEncoder();
+    rightRollerMtr = new SparkFlex(CANDevices.rightRollerMtrID, MotorType.kBrushless);
+    SparkFlexConfig rightRollerMtrSparkFlexConfig = new SparkFlexConfig();
+    rightRollerPID = rightRollerMtr.getClosedLoopController();
+    rightRollerEnc = rightRollerMtr.getEncoder();
 
-    RollerMtrSparkFlexConfig.inverted(true);
-    LeftActuatorMtrSparkFlexConfig.inverted(false);
-    RightActuatorMtrSparkFlexConfig.inverted(true);
+    intakePivotMtrSparkFlexConfig.inverted(true);
+    leftRollerMtrSparkFlexConfig.inverted(false);
+    rightRollerMtrSparkFlexConfig.inverted(true);
 
-    RollerMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
-    LeftActuatorMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
-    RightActuatorMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    intakePivotMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    leftRollerMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
+    rightRollerMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
+    intakePivotMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxPivotCurrentAmps);
+    leftRollerMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxRollerCurrentAmps);
+    rightRollerMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxRollerCurrentAmps);
 
-    RollerMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxRollerCurrentAmps);
-    LeftActuatorMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxActuatorCurrentAmps);
-    RightActuatorMtrSparkFlexConfig.smartCurrentLimit(IntakeConstants.maxActuatorCurrentAmps);
+    intakePivotMtrSparkFlexConfig.voltageCompensation(10);
+    leftRollerMtrSparkFlexConfig.voltageCompensation(10);
+    rightRollerMtrSparkFlexConfig.voltageCompensation(10);
+    intakePivotMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    intakePivotMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
 
-    RollerMtrSparkFlexConfig.voltageCompensation(10);
-    LeftActuatorMtrSparkFlexConfig.voltageCompensation(10);
-    RightActuatorMtrSparkFlexConfig.voltageCompensation(10);
+    intakePivotMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
+    intakePivotMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
+    intakePivotMtrSparkFlexConfig.softLimit.forwardSoftLimit(IntakeConstants.intakePivotMaxAngle);
+    intakePivotMtrSparkFlexConfig.softLimit.reverseSoftLimit(IntakeConstants.intakePivotMinAngle);
 
-    RollerMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
-    RollerMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
+    rightRollerMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    rightRollerMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
+  
+    leftRollerMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    leftRollerMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
 
-    LeftActuatorMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
-    LeftActuatorMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
-    LeftActuatorMtrSparkFlexConfig.softLimit.forwardSoftLimit(IntakeConstants.actuatorMaxPositionInches);
-    LeftActuatorMtrSparkFlexConfig.softLimit.reverseSoftLimit(IntakeConstants.actuatorMinPositionInches);
+    intakePivotMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.intakePivotPositionConversionFactor);
+    intakePivotMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.intakePivotVelocityConversionFactor);
 
-    RightActuatorMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
-    RightActuatorMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
-    RightActuatorMtrSparkFlexConfig.softLimit.forwardSoftLimit(IntakeConstants.actuatorMaxPositionInches);
-    RightActuatorMtrSparkFlexConfig.softLimit.reverseSoftLimit(IntakeConstants.actuatorMinPositionInches);
+    leftRollerMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.rollerPositionConversionFactor);
+    leftRollerMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.rollerVelocityConversionFactor);
 
-    LeftActuatorMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.actuatorPositionConversionFactor);
-    LeftActuatorMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.actuatorVelocityConversionFactor);
+    rightRollerMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.rollerPositionConversionFactor);
+    rightRollerMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.rollerVelocityConversionFactor);
 
-    RightActuatorMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.actuatorPositionConversionFactor);
-    RightActuatorMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.actuatorVelocityConversionFactor);
 
-    RollerMtrSparkFlexConfig.encoder.positionConversionFactor(IntakeConstants.rollerPositionConversionFactor);
-    RollerMtrSparkFlexConfig.encoder.velocityConversionFactor(IntakeConstants.rollerVelocityConversionFactor);
+    intakePivotMtrSparkFlexConfig.closedLoop
+      .p(IntakeConstants.intakePivotP)
+      .d(IntakeConstants.intakePivotD).feedForward
+      .kS(IntakeConstants.intakePivotkS)
+      .kV(IntakeConstants.intakePivotkV);
 
-    RollerMtrSparkFlexConfig.closedLoop
+    rightRollerMtrSparkFlexConfig.closedLoop
       .p(IntakeConstants.RollerP)
       .d(IntakeConstants.RollerD).feedForward
       .kS(IntakeConstants.RollerkS)
       .kV(IntakeConstants.RollerkV);
-
-    RightActuatorMtrSparkFlexConfig.closedLoop
-      .p(IntakeConstants.actuatorP)
-      .d(IntakeConstants.actuatorD).feedForward
-      .kS(IntakeConstants.RollerkS)
-      .kV(IntakeConstants.RollerkV);
-
-    LeftActuatorMtrSparkFlexConfig.closedLoop
-      .p(IntakeConstants.actuatorP)
-      .d(IntakeConstants.actuatorD)
+    
+      leftRollerMtrSparkFlexConfig.closedLoop
+      .p(IntakeConstants.RollerP)
+      .d(IntakeConstants.RollerD)
       .feedForward
       .kS(IntakeConstants.RollerkS)
       .kV(IntakeConstants.RollerkV);
 
-    rollerMtr.configure(
-      RollerMtrSparkFlexConfig,
+    intakePivotMtr.configure(
+      intakePivotMtrSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    leftActuatorMtr.configure(
-      LeftActuatorMtrSparkFlexConfig,
+    leftRollerMtr.configure(
+      leftRollerMtrSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    rightActuatorMtr.configure(
-      RightActuatorMtrSparkFlexConfig,
+    rightRollerMtr.configure(
+      rightRollerMtrSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
   }
 
   public void periodic() {
-    if (getActuatorPositionInches() >= IntakeConstants.actuatorSafePositionInches && targetRollerRPM != 0.0) {
-      rollerPID.setSetpoint(targetRollerRPM, ControlType.kVelocity);
+    
+  }
+
+  public void setTargetPivotAngle(double targetAngle) {
+      intakePivotPID.setSetpoint(targetAngle, ControlType.kPosition);
+  }
+
+  public double getPivotAngle() {
+    return (intakePivotEnc.getPosition());
+  }
+
+  public void resetPivotAngle () {
+    intakePivotEnc.setPosition(0.0);
+  }
+  public void setTargetRollerRPM(double targetRollerRPM) {
+    if (targetRollerRPM != 0.0) {
+      leftRollerPID.setSetpoint(targetRollerRPM, ControlType.kVelocity);
+      rightRollerPID.setSetpoint(targetRollerRPM, ControlType.kVelocity);
+
     } else {
-      rollerMtr.stopMotor();
+      leftRollerMtr.stopMotor();
+      rightRollerMtr.stopMotor();
     }
   }
 
-  public void setTargetActuatorInches(double targetPositionInches) {
-      LeftActuatorPID.setSetpoint(targetPositionInches, ControlType.kPosition);
-      RightActuatorPID.setSetpoint(targetPositionInches, ControlType.kPosition);
-  }
-
-  public double getActuatorPositionInches() {
-    return (leftActuatorEnc.getPosition() + rightActuatorEnc.getPosition()) / 2.0;
-  }
-
-  public void resetActuatorPosition () {
-    leftActuatorEnc.setPosition(0.0);
-    rightActuatorEnc.setPosition(0.0);
-  }
-  public void setTargetRollerRPM(double targetRPM) {
-    this.targetRollerRPM = targetRPM;
-  }
-
   public double getRollerRPM() {
-    return rollerEnc.getVelocity();
+    return (leftRollerEnc.getVelocity()+rightRollerEnc.getVelocity()) / 2.0;
   }
 }

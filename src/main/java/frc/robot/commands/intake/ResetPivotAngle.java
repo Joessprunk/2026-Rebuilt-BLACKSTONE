@@ -2,26 +2,25 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.turret;
+package frc.robot.commands.intake;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.TurretSys;
+import frc.robot.subsystems.IntakeSys;
 
 /** An example command that uses an example subsystem. */
-public class StopManualAzimuthAngle extends Command {
+public class ResetPivotAngle extends Command {
   
-  private final TurretSys turretSys;
-
-  public StopManualAzimuthAngle(TurretSys turretSys) {
-    this.turretSys = turretSys;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(turretSys);
+  private final IntakeSys intakeSys;
+  public ResetPivotAngle(IntakeSys intakeSys) {
+    this.intakeSys = intakeSys;
+    // Use addRequirements()`` here to declare subsystem dependencies.
+    addRequirements(intakeSys);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turretSys.setManualAzimuthAngle(null);
+    intakeSys.resetPivotAngle();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

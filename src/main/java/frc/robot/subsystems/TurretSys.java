@@ -28,18 +28,18 @@ import frc.robot.subsystems.drive.PoseEstimator;
 public class TurretSys extends SubsystemBase {
   private final SparkFlex leftFlyWheelMtr;
   private final SparkFlex rightFlyWheelMtr;
-  private final SparkFlex azimuthMtr;
+  private final SparkFlex hoodMtr;
 
-  private final RelativeEncoder azimuthEnc;
+  private final RelativeEncoder hoodEnc;
   private final RelativeEncoder leftFlyWheelEnc;
   private final RelativeEncoder rightFlyWheelEnc;
 
   private final SparkClosedLoopController leftFlyWheelPID;
   private final SparkClosedLoopController rightFlyWheelPID;
-  private final SparkClosedLoopController azimuthPID;
+  private final SparkClosedLoopController hoodPID;
   private final PoseEstimator poseEstimator;
 
-  private Double manualAzimuthAngle = null;
+  private Double manualHoodAngle = null;
   private Double manualFlywheelRPM = 0.0;
   private boolean isAiming = false;
   private boolean isFiring = false;
@@ -64,15 +64,15 @@ public class TurretSys extends SubsystemBase {
     rightFlyWheelPID = rightFlyWheelMtr.getClosedLoopController();
     rightFlyWheelEnc = rightFlyWheelMtr.getEncoder();
 
-    azimuthMtr = new SparkFlex(CANDevices.azimuthMtrID, MotorType.kBrushless);
-    SparkFlexConfig azimuthMtrSparkFlexConfig = new SparkFlexConfig();
-    azimuthPID = azimuthMtr.getClosedLoopController();
-    azimuthEnc = azimuthMtr.getEncoder();
+    hoodMtr = new SparkFlex(CANDevices.hoodMtrID, MotorType.kBrushless);
+    SparkFlexConfig hoodMtrSparkFlexConfig = new SparkFlexConfig();
+    hoodPID = hoodMtr.getClosedLoopController();
+    hoodEnc = hoodMtr.getEncoder();
 
-    azimuthMtrSparkFlexConfig.encoder
-        .positionConversionFactor(TurretConstants.azimuthPositionConversionFactorRadPerRot);
-    azimuthMtrSparkFlexConfig.encoder
-        .velocityConversionFactor(TurretConstants.azimuthVelocityConversionFactorRadPerRotPerSec);
+    hoodMtrSparkFlexConfig.encoder
+        .positionConversionFactor(TurretConstants.hoodPositionConversionFactorDeg);
+    hoodMtrSparkFlexConfig.encoder
+        .velocityConversionFactor(TurretConstants.hoodVelocityConversionFactorDeg);
 
     leftFlyWheelMtrSparkFlexConfig.encoder
         .positionConversionFactor(TurretConstants.flyWheelPositionConversionFactorRot);
@@ -83,26 +83,26 @@ public class TurretSys extends SubsystemBase {
     rightFlyWheelMtrSparkFlexConfig.encoder
         .velocityConversionFactor(TurretConstants.flyWheelVelocityConversionFactorRPM);
 
-    azimuthMtrSparkFlexConfig.inverted(true);
+    hoodMtrSparkFlexConfig.inverted(true);
     leftFlyWheelMtrSparkFlexConfig.inverted(true);
     rightFlyWheelMtrSparkFlexConfig.inverted(false);
 
-    azimuthMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    hoodMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
     leftFlyWheelMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
     rightFlyWheelMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
 
-    azimuthMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxAzimuthCurrentAmps);
+    hoodMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxHoodCurrentAmps);
     leftFlyWheelMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxFlyWheelCurrentAmps);
     rightFlyWheelMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxFlyWheelCurrentAmps);
 
-    azimuthMtrSparkFlexConfig.voltageCompensation(12);
+    hoodMtrSparkFlexConfig.voltageCompensation(12);
     leftFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
     rightFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
 
-    azimuthMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
-    azimuthMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
-    azimuthMtrSparkFlexConfig.softLimit.forwardSoftLimit(TurretConstants.maximumAizmuthAngleDeg);
-    azimuthMtrSparkFlexConfig.softLimit.reverseSoftLimit(TurretConstants.minimumAizmuthAngleDeg);
+    hoodMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
+    hoodMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
+    hoodMtrSparkFlexConfig.softLimit.forwardSoftLimit(TurretConstants.maximumHoodAngleDeg);
+    hoodMtrSparkFlexConfig.softLimit.reverseSoftLimit(TurretConstants.minimumHoodAngleDeg);
 
     leftFlyWheelMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
     leftFlyWheelMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
@@ -121,12 +121,13 @@ public class TurretSys extends SubsystemBase {
         .kS(TurretConstants.flywheelkS)
         .kV(TurretConstants.flywheelkV);
 
-    azimuthMtrSparkFlexConfig.closedLoop
-        .p(TurretConstants.azimuthP)
-        .d(TurretConstants.azimuthD).feedForward
-        .kS(TurretConstants.azimuthkS)
-        .kV(TurretConstants.azimuthkV)
-        .kA(TurretConstants.azimuthkA);
+    hoodMtrSparkFlexConfig.closedLoop
+        .p(TurretConstants.hoodP)
+        .d(TurretConstants.hoodD);
+        // .feedForward
+        // .kS(TurretConstants.hoodkS)
+        // .kV(TurretConstants.hoodkV)
+        // .kA(TurretConstants.hoodkA);
     leftFlyWheelMtr.configure(leftFlyWheelMtrSparkFlexConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
@@ -135,7 +136,7 @@ public class TurretSys extends SubsystemBase {
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
-    azimuthMtr.configure(azimuthMtrSparkFlexConfig,
+    hoodMtr.configure(hoodMtrSparkFlexConfig,
         ResetMode.kResetSafeParameters,
         PersistMode.kPersistParameters);
 
@@ -166,21 +167,21 @@ public class TurretSys extends SubsystemBase {
   @Override
   public void periodic() {
     if (DriverStation.isDisabled()) {
-      azimuthPID.setSetpoint(getCurrentAzimuthAngleRad(), ControlType.kPosition);
+      hoodPID.setSetpoint(0.0, ControlType.kPosition);
     } else if (isAiming
         && !isPassing
-        && calculateTargetAzimuthAngleShooting() <= Units.degreesToRadians(TurretConstants.maximumAizmuthAngleDeg)
-        && calculateTargetAzimuthAngleShooting() >= Units.degreesToRadians(TurretConstants.minimumAizmuthAngleDeg)) {
-      azimuthPID.setSetpoint(calculateTargetAzimuthAngleShooting(), ControlType.kPosition);
+        && calculateTargetAzimuthAngleShooting() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
+        && calculateTargetAzimuthAngleShooting() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)) {
+      hoodPID.setSetpoint(calculateTargetAzimuthAngleShooting(), ControlType.kPosition);
     } else if (isAiming
         && isPassing
-        && calculateTargetAzimuthAnglePassing() <= Units.degreesToRadians(TurretConstants.maximumAizmuthAngleDeg)
-        && calculateTargetAzimuthAnglePassing() >= Units.degreesToRadians(TurretConstants.minimumAizmuthAngleDeg)) {
-      azimuthPID.setSetpoint(calculateTargetAzimuthAnglePassing(), ControlType.kPosition);
-    } else if (manualAzimuthAngle != null) {
-      azimuthPID.setSetpoint(Units.degreesToRadians(manualAzimuthAngle), ControlType.kPosition);
+        && calculateTargetAzimuthAnglePassing() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
+        && calculateTargetAzimuthAnglePassing() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)) {
+      hoodPID.setSetpoint(calculateTargetAzimuthAnglePassing(), ControlType.kPosition);
+    } else if (manualHoodAngle != null) {
+      hoodPID.setSetpoint(Units.degreesToRadians(manualHoodAngle), ControlType.kPosition);
     } else {
-      azimuthPID.setSetpoint(TurretConstants.azimuthDefaultSetpointRad, ControlType.kPosition);
+      hoodPID.setSetpoint(TurretConstants.hoodDefaultSetpointRad, ControlType.kPosition);
     }
 
     if (isFiring) {
@@ -193,8 +194,8 @@ public class TurretSys extends SubsystemBase {
     }
   }
 
-  public void setManualAzimuthAngle(Double manualAzimuthAngle) {
-    this.manualAzimuthAngle = manualAzimuthAngle;
+  public void setManualHoodAngle(Double manualHoodAngle) {
+    this.manualHoodAngle = manualHoodAngle;
   }
 
   public void setManualFlywheelRPM(Double TargetFlywheelRPM) {
@@ -316,12 +317,12 @@ public class TurretSys extends SubsystemBase {
     return flywheelOffsetRPM;
   }
 
-  public double incrementAzimuthOffsetDeg() {
+  public double incrementHoodOffsetDeg() {
     aziumthOffsetDeg += TurretConstants.azimuthOffsetIncrementDeg;
     return aziumthOffsetDeg;
   }
 
-  public double decrementAzimuthOffsetDeg() {
+  public double decrementHoodOffsetDeg() {
     aziumthOffsetDeg -= TurretConstants.azimuthOffsetIncrementDeg;
     return aziumthOffsetDeg;
   }
@@ -333,15 +334,13 @@ public class TurretSys extends SubsystemBase {
         TurretConstants.secondDegreeFitConstant * Math.pow(calculateDistanceToTarget(), 2);
   }
 
-  public boolean isOnTarget() {
-    if (isPassing) {
-      return (Math.abs(getCurrentAzimuthAngleRad() - calculateTargetAzimuthAnglePassing()) <= 
-        Units.degreesToRadians(TurretConstants.azimuthErrorToleranceDeg));
-    } else {
-      return (Math.abs(getCurrentAzimuthAngleRad() - calculateTargetAzimuthAngleShooting()) <= 
-        Units.degreesToRadians(TurretConstants.azimuthErrorToleranceDeg));
-    }
-  }
+  // public boolean isOnTarget() {
+  //   if (isPassing) {
+      
+  //   } else {
+      
+  //   }
+  // }
 
   public void setFlywheelRPM(double targetRPM) {
     leftFlyWheelPID.setSetpoint(targetRPM, ControlType.kVelocity);
@@ -356,17 +355,17 @@ public class TurretSys extends SubsystemBase {
     return (flywheelOffsetRPM);
   }
 
-  public double getAzimuthOffsetDeg() {
+  public double getHoodOffsetDeg() {
     return aziumthOffsetDeg;
   }
 
-  public double getCurrentAzimuthAngleRad() {
-    return azimuthEnc.getPosition();
+  public double getCurrentHoodAngleRad() {
+    return hoodEnc.getPosition();
   }
 
-  public double getAzimuthManualTargetDeg() {
-    if (manualAzimuthAngle != null) {
-      return manualAzimuthAngle;
+  public double getHoodManualTargetDeg() {
+    if (manualHoodAngle != null) {
+      return manualHoodAngle;
     } else {
       return 0.0;
     }

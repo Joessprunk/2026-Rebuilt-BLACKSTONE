@@ -2,27 +2,27 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.tower;
+package frc.robot.commands.turret;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IndexerSys;
+import frc.robot.subsystems.TurretSys;
 
 /** An example command that uses an example subsystem. */
-public class SetTowerRPM extends Command {
+public class SetManualHoodAngle extends Command {
   
-  private final IndexerSys indexerSys;
-  private double targetRPM;
-  public SetTowerRPM(IndexerSys indexerSys, double targetRPM) {
-    this.indexerSys = indexerSys;
-    this.targetRPM = targetRPM;
+  private final TurretSys turretSys;
+  private double manualHoodAngle;
+  public SetManualHoodAngle(TurretSys turretSys, double manualHoodAngle) {
+    this.turretSys = turretSys;
+    this.manualHoodAngle = manualHoodAngle;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(indexerSys);
+    addRequirements(turretSys);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    indexerSys.setTargetTowerRPM(targetRPM);
+    turretSys.setManualHoodAngle(manualHoodAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

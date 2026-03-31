@@ -19,69 +19,97 @@ import frc.robot.Constants.IndexerConstants;
 
 public class IndexerSys extends SubsystemBase {
 
-  private final SparkFlex towerMtr;
-  private final SparkFlex spindexerMtr;
+  private final SparkFlex leftFloorRollerMtr;
+  private final SparkFlex rightFloorRollerMtr;
+  private final SparkFlex towerRollerMtr;
 
-  private final RelativeEncoder towerEnc;
-  private final RelativeEncoder spindexerEnc;
+  private final RelativeEncoder leftFloorRollerEnc;
+  private final RelativeEncoder rightFloorRollerEnc;
+  private final RelativeEncoder towerRollerEnc;
 
-  private final SparkClosedLoopController towerPID;
-  private final SparkClosedLoopController spindexerPID;
+  private final SparkClosedLoopController leftFloorRollerPID;
+  private final SparkClosedLoopController rightFloorRollerPID;
+  private final SparkClosedLoopController towerRollerPID;
 
   /** Creates a new ExampleSubsystem. */
   @SuppressWarnings("removal")
   public IndexerSys() {
 
-    towerMtr = new SparkFlex(CANDevices.towerMtrID, MotorType.kBrushless);
-    SparkFlexConfig towerSparkFlexConfig = new SparkFlexConfig();
-    towerEnc = towerMtr.getEncoder();
-    towerPID = towerMtr.getClosedLoopController();
+    leftFloorRollerMtr = new SparkFlex(CANDevices.leftFloorRollerMtrID, MotorType.kBrushless);
+    SparkFlexConfig leftFloorRollerSparkFlexConfig = new SparkFlexConfig();
+    leftFloorRollerEnc = leftFloorRollerMtr.getEncoder();
+    leftFloorRollerPID = leftFloorRollerMtr.getClosedLoopController();
 
-    spindexerMtr = new SparkFlex(CANDevices.spindexerMtrID, MotorType.kBrushless);
-    SparkFlexConfig spindexerSparkFlexConfig = new SparkFlexConfig();
-    spindexerEnc = spindexerMtr.getEncoder();
-    spindexerPID = spindexerMtr.getClosedLoopController();
+    rightFloorRollerMtr = new SparkFlex(CANDevices.rightFloorRollerMtrID, MotorType.kBrushless);
+    SparkFlexConfig rightFloorRollerSparkFlexConfig = new SparkFlexConfig();
+    rightFloorRollerEnc = rightFloorRollerMtr.getEncoder();
+    rightFloorRollerPID = rightFloorRollerMtr.getClosedLoopController();
 
-    towerSparkFlexConfig.inverted(false);
-    spindexerSparkFlexConfig.inverted(true);
+    towerRollerMtr = new SparkFlex(CANDevices.towerRollerMtrID, MotorType.kBrushless);
+    SparkFlexConfig towerRollerSparkFlexConfig = new SparkFlexConfig();
+    towerRollerEnc = towerRollerMtr.getEncoder();
+    towerRollerPID = towerRollerMtr.getClosedLoopController();
 
-    towerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
-    spindexerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    
+    towerRollerSparkFlexConfig.inverted(false);
+    rightFloorRollerSparkFlexConfig.inverted(true);
+    leftFloorRollerSparkFlexConfig.inverted(false);
 
-    towerSparkFlexConfig.smartCurrentLimit(IndexerConstants.maxTowerCurrentAmps);
-    spindexerSparkFlexConfig.smartCurrentLimit(IndexerConstants.maxSpindexerCurrentAmps);
+    towerRollerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    rightFloorRollerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
+    leftFloorRollerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
 
-    towerSparkFlexConfig.voltageCompensation(10);
-    spindexerSparkFlexConfig.voltageCompensation(10);
+    towerRollerSparkFlexConfig.smartCurrentLimit(IndexerConstants.maxTowerRollerCurrentAmps);
+    leftFloorRollerSparkFlexConfig.smartCurrentLimit(IndexerConstants.maxLeftFloorRollerCurrentAmps);
+    rightFloorRollerSparkFlexConfig.smartCurrentLimit(IndexerConstants.maxRightFloorRollerCurrentAmps);
 
-    towerSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
-    towerSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
-    spindexerSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
-    spindexerSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
+    towerRollerSparkFlexConfig.voltageCompensation(10);
+    leftFloorRollerSparkFlexConfig.voltageCompensation(10);
+    rightFloorRollerSparkFlexConfig.voltageCompensation(10);
 
-    towerSparkFlexConfig.encoder.positionConversionFactor(IndexerConstants.towerPositionConversionFactor);
-    towerSparkFlexConfig.encoder.velocityConversionFactor(IndexerConstants.towerVelocityConversionFactor);
 
-    spindexerSparkFlexConfig.encoder.positionConversionFactor(IndexerConstants.spindexerPositionConversionFactor);
-    spindexerSparkFlexConfig.encoder.velocityConversionFactor(IndexerConstants.spindexerVelocityConversionFactor);
+    towerRollerSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    towerRollerSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
+    leftFloorRollerSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    leftFloorRollerSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
+    rightFloorRollerSparkFlexConfig.softLimit.forwardSoftLimitEnabled(false);
+    rightFloorRollerSparkFlexConfig.softLimit.reverseSoftLimitEnabled(false);
 
-    towerSparkFlexConfig.closedLoop
-      .p(IndexerConstants.towerP)
-      .d(IndexerConstants.towerD)
-      .feedForward.kS(IndexerConstants.towerkS)
-      .kV(IndexerConstants.towerkV);
+    towerRollerSparkFlexConfig.encoder.positionConversionFactor(IndexerConstants.towerRollerPositionConversionFactor);
+    towerRollerSparkFlexConfig.encoder.velocityConversionFactor(IndexerConstants.towerRollerVelocityConversionFactor);
 
-    spindexerSparkFlexConfig.closedLoop
-      .p(IndexerConstants.spindexerP)
-      .d(IndexerConstants.spindexerD);
+    leftFloorRollerSparkFlexConfig.encoder.positionConversionFactor(IndexerConstants.FloorPositionConversionFactor);
+    leftFloorRollerSparkFlexConfig.encoder.velocityConversionFactor(IndexerConstants.FloorVelocityConversionFactor);
 
-    towerMtr.configure(
-      towerSparkFlexConfig,
+    rightFloorRollerSparkFlexConfig.encoder.positionConversionFactor(IndexerConstants.FloorPositionConversionFactor);
+    rightFloorRollerSparkFlexConfig.encoder.velocityConversionFactor(IndexerConstants.FloorVelocityConversionFactor);
+
+    towerRollerSparkFlexConfig.closedLoop
+      .p(IndexerConstants.towerRollerP)
+      .d(IndexerConstants.towerRollerD)
+      .feedForward.kS(IndexerConstants.towerRollerkS)
+      .kV(IndexerConstants.towerRollerkV);
+
+    leftFloorRollerSparkFlexConfig.closedLoop
+      .p(IndexerConstants.FloorRollerP)
+      .d(IndexerConstants.FloorRollerD);
+
+    rightFloorRollerSparkFlexConfig.closedLoop
+      .p(IndexerConstants.FloorRollerP)
+      .d(IndexerConstants.FloorRollerD);
+
+    towerRollerMtr.configure(
+      towerRollerSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
-    spindexerMtr.configure(
-      spindexerSparkFlexConfig,
+    leftFloorRollerMtr.configure(
+      leftFloorRollerSparkFlexConfig,
+      ResetMode.kResetSafeParameters,
+      PersistMode.kPersistParameters);
+
+    rightFloorRollerMtr.configure(
+      rightFloorRollerSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);
 
@@ -91,27 +119,29 @@ public class IndexerSys extends SubsystemBase {
   public void periodic() {
   }
 
-  public void setTargetSpindexerRPM(double targetSpindexerRPM) {
-    // if (targetSpindexerRPM != 0.0) {
-      spindexerPID.setSetpoint(targetSpindexerRPM, ControlType.kVelocity);
-    // } else {
-      // towerMtr.stopMotor();
-    // }
+  public void setTargetFloorRollerRPM(double targetFloorRollerRPM) {
+     if (targetFloorRollerRPM != 0.0) {
+      leftFloorRollerPID.setSetpoint(targetFloorRollerRPM, ControlType.kVelocity);
+      rightFloorRollerPID.setSetpoint(targetFloorRollerRPM, ControlType.kVelocity);
+    } else {
+      leftFloorRollerMtr.stopMotor();
+      rightFloorRollerMtr.stopMotor();
+     }
   }
 
-  public void setTargetTowerRPM(double targetTowerRPM) {
-    if (targetTowerRPM != 0.0) {
-      towerPID.setSetpoint(targetTowerRPM, ControlType.kVelocity);
+  public void setTargetTowerRollerRPM(double targetTowerRollerRPM) {
+    if (targetTowerRollerRPM != 0.0) {
+      towerRollerPID.setSetpoint(targetTowerRollerRPM, ControlType.kVelocity);
     } else {
-      towerMtr.stopMotor();
+      towerRollerMtr.stopMotor();
     }
   }
 
-  public double getSpindexerRPM() {
-    return spindexerEnc.getVelocity();
+  public double getFloorRollerRPM() {
+    return (leftFloorRollerEnc.getVelocity() + rightFloorRollerEnc.getVelocity()) / 2.0;
   }
 
-  public double getTowerRPM() {
-    return towerEnc.getVelocity();
+  public double getTowerRollerRPM() {
+    return towerRollerEnc.getVelocity();
   }
 }

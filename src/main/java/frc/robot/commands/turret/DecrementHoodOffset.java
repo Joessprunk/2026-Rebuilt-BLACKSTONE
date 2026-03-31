@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSys;
 
 /** An example command that uses an example subsystem. */
-public class IncrementAzimuthOffset extends Command {
+public class DecrementHoodOffset extends Command {
   
   private final TurretSys turretSys;
 
-  public IncrementAzimuthOffset(TurretSys turretSys) {
+  public DecrementHoodOffset(TurretSys turretSys) {
     this.turretSys = turretSys;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turretSys);
@@ -21,7 +21,7 @@ public class IncrementAzimuthOffset extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    turretSys.incrementAzimuthOffsetDeg();
+    turretSys.decrementHoodOffsetDeg();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

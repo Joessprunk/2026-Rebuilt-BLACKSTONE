@@ -72,20 +72,22 @@ public final class Constants {
         public static final int blModuleDriveMtrID = 9;
         public static final int blModuleSteerMtrID = 13;
 
-        public static final int RollerMtrID = 15;
-        public static final int LeftActuatorMtrID = 16;
-        public static final int RightActuatorMtrID = 17;
+        public static final int intakePivotMtrID = 15;
+        public static final int leftRollerMtrID = 16;
+        public static final int rightRollerMtrID = 17;
 
-        public static final int spindexerMtrID = 20;
-        public static final int towerMtrID = 21;
+        public static final int towerRollerMtrID = 19;
+        public static final int leftFloorRollerMtrID = 20;
+        public static final int rightFloorRollerMtrID = 21;
+
+
 
         public static final int azimuthMtrID = 22;
         public static final int leftFlyWheelMtrID = 23;
         public static final int rightFlyWheelMtrID = 24;
 
-        public static final int HookMtrID = 25;
-        public static final int LeftElevatorID = 26;
-        public static final int RightElevatorID = 27;
+        public static final int hoodMtrID = 0;
+
 
     }
 
@@ -202,7 +204,7 @@ public final class Constants {
 
     public class IntakeConstants {
         public static final int maxRollerCurrentAmps = 45;
-        public static final int maxActuatorCurrentAmps = 25;
+        public static final int maxPivotCurrentAmps = 25;
 
         public static final double ActuatorPulleyToothCount = 18.0;
         public static final double actuatorPositionConversionFactor = 0.95; // Units.metersToInches(ActuatorPulleyToothCount
@@ -214,25 +216,28 @@ public final class Constants {
         public static final double rollerPositionConversionFactor = 1.0 / 3.0;
         public static final double rollerVelocityConversionFactor = 1.0 / 3.0;
 
-        public static final double actuatorOutPositionInches = 12.5;
-        public static final double actuatorInPositionInches = 0.0;
-        public static final double actuatorBufferPositionInches = 7.0;
-        public static final double actuatorSafePositionInches = 6.0;
+        public static final double intakePivotMinAngle = -5.0;
+        public static final double intakePivotMaxAngle = 205.0;
 
-        public static final double actuatorMinPositionInches = -1.0;
-        public static final double actuatorMaxPositionInches = 12.5;
+        public static final double intakingPivotAngle = 160.0;
+        public static final double PivotBufferPositionAngle = 50.0;
 
-        public static final double RollerP = 0.0002; // 0.0010;
-        public static final double RollerD = 0.0; // 0.0002;
-        public static final double RollerkS = 0.25;
-        public static final double RollerkV = 0.005;
+        public static final double intakePivotP = 0.0002; // 0.0010;
+        public static final double intakePivotD = 0.0; // 0.0002;
+        public static final double intakePivotkS = 0.25;
+        public static final double intakePivotkV = 0.005;
 
-        public static final double actuatorP = 1;// 0.015;
-        public static final double actuatorD = 0.05;
-        public static final double actuatorkS = 0.0;// 2.5;
-        public static final double actuatorkV = 0.0;// 100.45;
-        public static final double intakingRollerRPM = 4000.0;
-        public static final double agitatingRollerRPM = 500.0;
+        public static final double RollerP = 1;// 0.015;
+        public static final double RollerD = 0.05;
+        public static final double RollerkS = 0.0;// 2.5;
+        public static final double RollerkV = 0.0;// 100.45;
+        
+        public static final double RollerIntakingRPM = 4000.0;
+        public static final double RollerShootingRPM = 2000.0;
+
+        public static final double intakePivotPositionConversionFactor = 360.0 / 25.0;
+        public static final double intakePivotVelocityConversionFactor = 360.0 / 25.0;
+        
 
         // public static final double manualActuatorAdjustmentSpeed = 0.4;
     }
@@ -288,71 +293,39 @@ public final class Constants {
                 new Rotation2d());
 
         public static final double flywheelErrorToleranceRPM = 30.0;
+        public static final double hoodPositionConversionFactorDeg = 0;
+        public static final double hoodVelocityConversionFactorDeg = 0;
+        public static final int maxHoodCurrentAmps = 0;
+        public static final double maximumHoodAngleDeg = 0;
+        public static final double minimumHoodAngleDeg = 0;
+        public static final double hoodP = 0;
+        public static final double hoodD = 0;
+        public static final double hoodDefaultSetpointRad = 0;
     }
 
-    public class ClimberConstants {
-        public static final int maxHookCurrentAmps = 20;
-        public static final int maxElevatorCurrentAmps = 30;
-        public static final double ElevatorP = 0.5;
-        public static final double ElevatorD = 0.0;
-
-        public static final double HookP = 0.0;
-        public static final double HookD = 0.0;
-
-        public static final double elevatorPositionConversionFactor = 5.5 / 45.0;
-        public static final double elevatorVelocityConversionFactor = 5.5 / 45.0 / 60.0;
-
-        public static final double hookPositionConversionFactor = 1.0 * 360.0;
-        public static final double hookVelocityConversionFactor = 1.0;
-
-        public static final double ElevatorMinInches = 0.0;
-        public static final double ElevatorMaxInches = 9.75;
-
-        public static final double hookMinDeg = -5.0;
-        public static final double hookMaxDeg = 100.0;
-
-        public static final double hookOutPositionDeg = 90.0;
-
-        public static final double elevatorClimbPositionInches = 3.5;
-        public static final double ElevatorUpPositionInches = 9.5;
-
-        // public static final double ClimberL1Position = 6.0;
-        // public static final double ClimberL1HandoffPosition = 0.0;
-        // public static final double ClimberL1BufferPosition = 3.0;
-        // public static final double ClimberL2Position = 9;
-        // public static final double ClimberL2HandoffPosition = 4.0;
-        // public static final double ClimberL2BufferPosition = 6.5;
-        // public static final double ClimberL3Position = 9;
-        // public static final double ClimberL3HandoffPosition = 4.0;
-        // public static final double ClimberL3BufferPosition = 6.5;
-
-        public static final double ElevatorMaxVelocityInchesPerSecond = 35.0;
-        public static final double ElevatorMaxAccelerationInchesPerSecond = 50.0;
-
-    }
-
+    
     public class IndexerConstants {
-        public static final int maxTowerCurrentAmps = 30;
-        public static final int maxSpindexerCurrentAmps = 30;
+        public static final int maxTowerRollerCurrentAmps = 30;
+        public static final int maxLeftFloorRollerCurrentAmps = 30;
+        public static final int maxRightFloorRollerCurrentAmps = 30;
 
-        public static final double towerP = 0.003;
-        public static final double towerD = 0.04;
-        public static final double towerkS = 0.8;
-        public static final double towerkV = 0.015;
+        public static final double towerRollerP = 0.003;
+        public static final double towerRollerD = 0.04;
+        public static final double towerRollerkS = 0.8;
+        public static final double towerRollerkV = 0.015;
 
-        public static final double spindexerP = 0.005;
-        public static final double spindexerD = 0.0005;
+        public static final double FloorRollerP = 0.005;
+        public static final double FloorRollerD = 0.0005;
+        
 
-        public static final double towerPositionConversionFactor = 18.0 / 24.0 / 5.0;
-        public static final double towerVelocityConversionFactor = 18.0 / 24.0 / 5.0;
+        public static final double towerRollerPositionConversionFactor = 1.0 / 5.0;
+        public static final double towerRollerVelocityConversionFactor = 1.0 / 5.0 ;
 
-        public static final double spindexerPositionConversionFactor = 1.0 / 15.0;
-        public static final double spindexerVelocityConversionFactor = 1.0 / 15.0;
+        public static final double FloorPositionConversionFactor = 1.0 / 5.0;
+        public static final double FloorVelocityConversionFactor = 1.0 / 5.0;
 
-        public static final double spindexerShootingRPM = 5000.0;
-        public static final double spindexerAgitatingRPM = 5000.0;
-
-        public static final double towerShootingRPM = 350.0;
-        public static final double towerIntakingRPM = -100.0;
+        public static final double towerRollerShootingRPM = 800.0;
+        public static final double floorRollerShootingRPM = 800.0;
+        
     }
 }
