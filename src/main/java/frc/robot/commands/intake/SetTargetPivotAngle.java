@@ -11,10 +11,10 @@ import frc.robot.subsystems.IntakeSys;
 public class SetTargetPivotAngle extends Command {
   
   private final IntakeSys intakeSys;
-  private double targetInches;
-  public SetTargetPivotAngle(IntakeSys intakeSys, double targetInches) {
+  private double targetAngle;
+  public SetTargetPivotAngle(IntakeSys intakeSys, double targetAngle) {
     this.intakeSys = intakeSys;
-    this.targetInches = targetInches;
+    this.targetAngle = targetAngle;
     // Use addRequirements()`` here to declare subsystem dependencies.
     addRequirements(intakeSys);
   }
@@ -22,7 +22,7 @@ public class SetTargetPivotAngle extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intakeSys.setTargetPivotAngle(targetInches);
+    intakeSys.setTargetPivotAngle(targetAngle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

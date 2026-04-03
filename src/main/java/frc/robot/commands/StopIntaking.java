@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
@@ -13,12 +12,11 @@ import frc.robot.commands.intake.SetIntakeRollerRPM;
 import frc.robot.commands.intake.SetTargetPivotAngle;
 
 /** An example command that uses an example subsystem. */
-public class StartIntaking extends SequentialCommandGroup {
-  public StartIntaking(IntakeSys intakeSys, IndexerSys indexerSys) {
+public class StopIntaking extends SequentialCommandGroup {
+  public StopIntaking(IntakeSys intakeSys, IndexerSys indexerSys) {
     super(
-      new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle), 
-      new WaitCommand(0.1),
-      new SetIntakeRollerRPM(intakeSys, Constants.IntakeConstants.RollerIntakingRPM) 
+        new SetIntakeRollerRPM(intakeSys, 0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
     );
   }
 }

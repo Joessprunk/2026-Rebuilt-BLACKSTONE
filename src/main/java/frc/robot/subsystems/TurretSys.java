@@ -45,7 +45,7 @@ public class TurretSys extends SubsystemBase {
   private boolean isFiring = false;
   private boolean isPassing = false;
   private double flywheelOffsetRPM = 0.0;
-  private double aziumthOffsetDeg = 0.0;
+  private double HoodOffsetDeg = 0.0;
   // private final SysIdRoutine sysIdRoutine;
   private Field2d field = new Field2d();
 
@@ -83,7 +83,7 @@ public class TurretSys extends SubsystemBase {
     rightFlyWheelMtrSparkFlexConfig.encoder
         .velocityConversionFactor(TurretConstants.flyWheelVelocityConversionFactorRPM);
 
-    hoodMtrSparkFlexConfig.inverted(true);
+    hoodMtrSparkFlexConfig.inverted(false);
     leftFlyWheelMtrSparkFlexConfig.inverted(true);
     rightFlyWheelMtrSparkFlexConfig.inverted(false);
 
@@ -96,8 +96,8 @@ public class TurretSys extends SubsystemBase {
     rightFlyWheelMtrSparkFlexConfig.smartCurrentLimit(TurretConstants.maxFlyWheelCurrentAmps);
 
     hoodMtrSparkFlexConfig.voltageCompensation(12);
-    leftFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
-    rightFlyWheelMtrSparkFlexConfig.voltageCompensation(10);
+    leftFlyWheelMtrSparkFlexConfig.voltageCompensation(12);
+    rightFlyWheelMtrSparkFlexConfig.voltageCompensation(12);
 
     hoodMtrSparkFlexConfig.softLimit.forwardSoftLimitEnabled(true);
     hoodMtrSparkFlexConfig.softLimit.reverseSoftLimitEnabled(true);
@@ -111,22 +111,22 @@ public class TurretSys extends SubsystemBase {
 
     rightFlyWheelMtrSparkFlexConfig.closedLoop
         .p(TurretConstants.flywheelkP)
-        .d(TurretConstants.flywheelkD).feedForward
+        .d(TurretConstants.flywheelkD) .feedForward
         .kS(TurretConstants.flywheelkS)
         .kV(TurretConstants.flywheelkV);
 
     leftFlyWheelMtrSparkFlexConfig.closedLoop
         .p(TurretConstants.flywheelkP)
-        .d(TurretConstants.flywheelkD).feedForward
+        .d(TurretConstants.flywheelkD)  .feedForward
         .kS(TurretConstants.flywheelkS)
         .kV(TurretConstants.flywheelkV);
 
     hoodMtrSparkFlexConfig.closedLoop
         .p(TurretConstants.hoodP)
-        .d(TurretConstants.hoodD);
-        // .feedForward
-        // .kS(TurretConstants.hoodkS)
-        // .kV(TurretConstants.hoodkV)
+        .d(TurretConstants.hoodD)
+        .feedForward
+        .kS(TurretConstants.hoodkS)
+        .kV(TurretConstants.hoodkG);
         // .kA(TurretConstants.hoodkA);
     leftFlyWheelMtr.configure(leftFlyWheelMtrSparkFlexConfig,
         ResetMode.kResetSafeParameters,
@@ -170,23 +170,25 @@ public class TurretSys extends SubsystemBase {
       hoodPID.setSetpoint(0.0, ControlType.kPosition);
     } else if (isAiming
         && !isPassing
-        && calculateTargetAzimuthAngleShooting() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
-        && calculateTargetAzimuthAngleShooting() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)) {
-      hoodPID.setSetpoint(calculateTargetAzimuthAngleShooting(), ControlType.kPosition);
+        // && calculateTargetAzimuthAngleShooting() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
+        // && calculateTargetAzimuthAngleShooting() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)
+        ) {
+      /*hoodPID.setSetpoint(calculateTargetAzimuthAngleShooting(), ControlType.kPosition);*/
     } else if (isAiming
         && isPassing
-        && calculateTargetAzimuthAnglePassing() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
-        && calculateTargetAzimuthAnglePassing() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)) {
-      hoodPID.setSetpoint(calculateTargetAzimuthAnglePassing(), ControlType.kPosition);
+      //   && calculateTargetAzimuthAnglePassing() <= Units.degreesToRadians(TurretConstants.maximumHoodAngleDeg)
+      //   && calculateTargetAzimuthAnglePassing() >= Units.degreesToRadians(TurretConstants.minimumHoodAngleDeg)
+      ) {
+      // hoodPID.setSetpoint(calculateTargetAzimuthAnglePassing(), ControlType.kPosition);
     } else if (manualHoodAngle != null) {
-      hoodPID.setSetpoint(Units.degreesToRadians(manualHoodAngle), ControlType.kPosition);
+      hoodPID.setSetpoint(manualHoodAngle + HoodOffsetDeg, ControlType.kPosition);
     } else {
-      hoodPID.setSetpoint(TurretConstants.hoodDefaultSetpointRad, ControlType.kPosition);
+      hoodPID.setSetpoint(TurretConstants.hoodDefaultSetpointAngleDeg, ControlType.kPosition);
     }
 
     if (isFiring) {
       setFlywheelRPM(calculateTargetFlywheelRPM());
-    } else if (manualFlywheelRPM != null) {
+    } else if (manualFlywheelRPM != null && manualFlywheelRPM != 0.0) {
       setFlywheelRPM(manualFlywheelRPM + flywheelOffsetRPM);
     } else {
       leftFlyWheelMtr.stopMotor();
@@ -239,53 +241,57 @@ public class TurretSys extends SubsystemBase {
         - 30.0 <= TurretConstants.flywheelErrorToleranceRPM;
   }
 
+  public boolean isAtManualSpeed(){
+    return 40.0 >= Math.abs((manualFlywheelRPM + flywheelOffsetRPM) - getFlywheelRPM());
+  }
+
   public Pose2d calculateTurretPose() {
     return poseEstimator.getPose().transformBy(TurretConstants.robotToTurret);
   }
 
-  public double calculateTargetAzimuthAngleShooting() {
-    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-      return TurretConstants.targetPoseBlue.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-      return TurretConstants.targetPoseRed.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    } else {
-      return TurretConstants.targetPoseBlue.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    }
-  }
+  // public double calculateTargetAzimuthAngleShooting() {
+  //   if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+  //     return TurretConstants.targetPoseBlue.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+  //     return TurretConstants.targetPoseRed.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   } else {
+  //     return TurretConstants.targetPoseBlue.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   }
+  // }
 
-  public double calculateTargetAzimuthAnglePassing() {
-    if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
-      return TurretConstants.passingPoseBlue.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
-      return TurretConstants.passingPoseRed.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    } else {
-      return TurretConstants.passingPoseBlue.getTranslation()
-          .minus(calculateTurretPose().getTranslation())
-          .getAngle()
-          .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
-          + Units.degreesToRadians(aziumthOffsetDeg);
-    }
-  }
+  // public double calculateTargetAzimuthAnglePassing() {
+  //   if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
+  //     return TurretConstants.passingPoseBlue.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
+  //     return TurretConstants.passingPoseRed.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   } else {
+  //     return TurretConstants.passingPoseBlue.getTranslation()
+  //         .minus(calculateTurretPose().getTranslation())
+  //         .getAngle()
+  //         .minus(new Rotation2d(poseEstimator.getPose().getRotation().getRadians())).getRadians()
+  //         + Units.degreesToRadians(aziumthOffsetDeg);
+  //   }
+  // }
 
   public double calculateDistanceToTarget() {
     if (isPassing) {
@@ -318,13 +324,13 @@ public class TurretSys extends SubsystemBase {
   }
 
   public double incrementHoodOffsetDeg() {
-    aziumthOffsetDeg += TurretConstants.azimuthOffsetIncrementDeg;
-    return aziumthOffsetDeg;
+    HoodOffsetDeg += TurretConstants.HoodOffsetIncrementDeg;
+    return HoodOffsetDeg;
   }
 
   public double decrementHoodOffsetDeg() {
-    aziumthOffsetDeg -= TurretConstants.azimuthOffsetIncrementDeg;
-    return aziumthOffsetDeg;
+    HoodOffsetDeg -= TurretConstants.HoodOffsetIncrementDeg;
+    return HoodOffsetDeg;
   }
 
   public double calculateTargetFlywheelRPM() {
@@ -356,7 +362,7 @@ public class TurretSys extends SubsystemBase {
   }
 
   public double getHoodOffsetDeg() {
-    return aziumthOffsetDeg;
+    return HoodOffsetDeg;
   }
 
   public double getCurrentHoodAngleRad() {

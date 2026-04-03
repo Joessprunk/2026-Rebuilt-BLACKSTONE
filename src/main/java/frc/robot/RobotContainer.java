@@ -11,8 +11,11 @@ import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.StartIntaking;
+import frc.robot.commands.StartManualShooting;
 import frc.robot.commands.StartShooting;
 import frc.robot.commands.StartShootingAuto;
+import frc.robot.commands.StopIntaking;
+import frc.robot.commands.StopManualShooting;
 import frc.robot.commands.StopShooting;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.LockCmd;
@@ -26,6 +29,7 @@ import frc.robot.commands.turret.DecrementFlywheelOffset;
 import frc.robot.commands.turret.IncrementHoodOffset;
 import frc.robot.commands.turret.IncrementFlywheelOffset;
 import frc.robot.commands.turret.SetManualFlywheelRPM;
+import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.StopManualFlywheelRPM;
 import frc.robot.commands.turret.ToggleIsPassing;
 import frc.robot.subsystems.IndexerSys;
@@ -140,36 +144,54 @@ public class RobotContainer {
 
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
 
-		driverController
-				.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.tiggerPressedThreshold)
-				.onTrue(new LockCmd(swerveDrive))
-				.onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
-				.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
+		// driverController
+		// 		.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.tiggerPressedThreshold)
+		// 		.onTrue(new LockCmd(swerveDrive))
+		// 		.onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+		// 		.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
 
-		driverController
-				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
-				.onTrue(new StartIntaking(intakeSys, indexerSys))
-				.onFalse(new SetIntakeRollerRPM(intakeSys, 0));
+		// driverController
+		// 		.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
+		// 		.onTrue(new StartIntaking(intakeSys, indexerSys))
+		// 		.onFalse(new SetIntakeRollerRPM(intakeSys, 0));
 
-		// operator bindings for competition
-		operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
-		operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
-		operatorController.povLeft().onTrue(new IncrementHoodOffset(turretSys));
-		operatorController.povRight().onTrue(new DecrementHoodOffset(turretSys));
-		operatorController.start().onTrue(new ToggleIsPassing(turretSys));
-		operatorController.leftStick().onTrue(new ResetPivotAngle(intakeSys));
-		operatorController.rightBumper().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
-		operatorController.leftBumper().onTrue(new SetTargetPivotAngle(intakeSys, 12.0));
+        
+			driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
+			.onTrue(new StartIntaking(intakeSys, indexerSys))
+			.onFalse(new StopIntaking(intakeSys, indexerSys));
 
-		operatorController
-				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
-				.onTrue(new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM))
-				.onTrue(new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM))
-				.onTrue(new SetManualFlywheelRPM(turretSys, 3500.0))
-				.onFalse(new SetIntakeRollerRPM(intakeSys, 0))
-				.onFalse(new SetFloorRollerRPM(indexerSys, 0))
-				.onFalse(new SetTowerRollerRPM(indexerSys, 0))
-				.onFalse(new StopManualFlywheelRPM(turretSys));
+			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
+			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+
+			driverController.back().onTrue(new ResetPivotAngle(intakeSys));
+
+			driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+			driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+			driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+			driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
+
+			driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, 120.0));
+			
+		
+
+
+
+		// // operator bindings for competition
+		// operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+		// operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+		// operatorController.start().onTrue(new ToggleIsPassing(turretSys));
+		
+
+		// operatorController
+		// 		.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
+		// 		.onTrue(new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM))
+		// 		.onTrue(new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM))
+		// 		.onTrue(new SetManualFlywheelRPM(turretSys, 3500.0))
+		// 		.onFalse(new SetIntakeRollerRPM(intakeSys, 0))
+		// 		.onFalse(new SetFloorRollerRPM(indexerSys, 0))
+		// 		.onFalse(new SetTowerRollerRPM(indexerSys, 0))
+		// 		.onFalse(new StopManualFlywheelRPM(turretSys));
 
 		// operatorController.b().onTrue(new StopManualFlywheelRPM(turretSys));
 		// operatorController.a().onTrue(new SetManualFlywheelRPM(turretSys, 1700.0));
@@ -201,47 +223,47 @@ public class RobotContainer {
 		// // driverController.x().onTrue(turretSys.sysIdQuasistaticForward());
 		// // driverController.y().onTrue(turretSys.sysIdQuasistaticReverse());
 
-		// // turret manual control bindings for testing (DISABLE SOFT LIMITS BEFORE
-		// USING)
-		// operatorController.x().onTrue(new StartAiming(turretSys));
-		// operatorController.y().onTrue(new StopAiming(turretSys));
-		// operatorController.x().onTrue(new StopManualAzimuthAngle(turretSys));
+		
 
 		// flywheel RPM control bindings for testing
 		// operatorController.x().onTrue(new SetManualFlywheelRPM(turretSys, 0.0));
-		// operatorController.b().onTrue(new SetManualFlywheelRPM(turretSys, 4000.0));
-		// operatorController.a().onTrue(new SetManualFlywheelRPM(turretSys, 1000.0));
-		// operatorController.y().onTrue(new SetManualFlywheelRPM(turretSys, 4800.0));
+		// operatorController.b().onTrue(new SetManualFlywheelRPM(turretSys, 2500.0));
+		// operatorController.a().onTrue(new SetManualFlywheelRPM(turretSys, 2000.0));
+		// operatorController.y().onTrue(new SetManualFlywheelRPM(turretSys, 3000.0));
 
-		// spindexer RPM control bindings for testing
-		// operatorController.a().onTrue(new SetSpindexerRPM(indexerSys, 0.0));
-		// operatorController.b().onTrue(new SetSpindexerRPM(indexerSys, 100.0));
-		// operatorController.x().onTrue(new SetSpindexerRPM(indexerSys, 1000.0));
-		// operatorController.y().onTrue(new SetSpindexerRPM(indexerSys, 7000.0));
+		// hood angle control bindings for testing
+		// operatorController.x().onTrue(new SetManualHoodAngle(turretSys, 0.0));
+		// operatorController.b().onTrue(new SetManualHoodAngle(turretSys, 20.0));
+		// operatorController.a().onTrue(new SetManualHoodAngle(turretSys, 10.0));
+		// operatorController.y().onTrue(new SetManualHoodAngle(turretSys, 30.0));
 
-		// tower RPM control bindings for testing
-		// operatorController.a().onTrue(new SetTowerRPM(indexerSys, 1000.0));
-		// operatorController.b().onTrue(new SetTowerRPM(indexerSys, 3000.0));
-		// operatorController.x().onTrue(new SetTowerRPM(indexerSys, 0.0));
-		// operatorController.y().onTrue(new SetTowerRPM(indexerSys, 4000.0));
+		// Indexer RPM control bindings for testing
+		// operatorController.a().onTrue(new SetTowerRollerRPM(indexerSys, 100.0));
+		// operatorController.b().onTrue(new SetTowerRollerRPM(indexerSys, 500.0));
+		// operatorController.x().onTrue(new SetTowerRollerRPM(indexerSys, 0.0));
+		// operatorController.y().onTrue(new SetTowerRollerRPM(indexerSys, 1000.0));
+
+		// Indexer floor roller RPM control bindings for testing
+        // operatorController.a().onTrue(new SetFloorRollerRPM(indexerSys, 750.0));
+		// operatorController.b().onTrue(new SetFloorRollerRPM(indexerSys, 500.0));
+		// operatorController.x().onTrue(new SetFloorRollerRPM(indexerSys, 0.0));
+		// operatorController.y().onTrue(new SetFloorRollerRPM(indexerSys, 1000.0));
+		// operatorController.start().onTrue(new SetTargetPivotAngle(intakeSys, 30));
 
 		// intake roller RPM control bindings for testing
-		// operatorController.b().onTrue(new SetIntakeRollerRPM(intakeSys, 0.0));
-		// operatorController.b().onTrue(new SetIntakeRollerRPM(intakeSys, 1000.0));
-		// operatorController.y().onTrue(new SetIntakeRollerRPM(intakeSys, 3000.0));
-		// operatorController.y().onTrue(new SetIntakeRollerRPM(intakeSys, 500.0));
+		// operatorController.x().onTrue(new SetIntakeRollerRPM(intakeSys, 0.0));
+		// operatorController.b().onTrue(new SetIntakeRollerRPM(intakeSys, 2000.0));
+		// operatorController.y().onTrue(new SetIntakeRollerRPM(intakeSys, 5000.0));
+		// operatorController.a().onTrue(new SetIntakeRollerRPM(intakeSys, 500.0));
 
-		// // intake actuator position control bindings for testing
-		// operatorController.b().onTrue(new SetIntakeActuatorInches(intakeSys, 8.0));
-		// operatorController.x().onTrue(new SetIntakeActuatorInches(intakeSys, 0.0));
-		// operatorController.y().onTrue(new SetIntakeActuatorInches(intakeSys,12.0));
+		// // intake pivot position control bindings for testing
+		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 25.0));
+		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 50.0));
+		// operatorController.x().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,110.0));
+		// operatorController.start().onTrue(new ResetPivotAngle(intakeSys));
 
-		// climber position control bindings for testing
-		// operatorController.a().onTrue(new SetClimberPositon(climberSys, 0.0));
-		// operatorController.b().onTrue(new SetClimberPositon(climberSys, 3.5));
-		// operatorController.y().onTrue(new SetClimberPositon(climberSys,
-		// ClimberConstants.ElevatorMaxInches));
-
+		
 	}
 
 	public Command getAutonomousCommand() {
@@ -274,7 +296,7 @@ public class RobotContainer {
 		// SmartDashboard.putNumber("manual azimuth angle rads",
 		// turretSys.getAzimuthManualTargetDeg());
 		
-		SmartDashboard.putNumber("target azimuth angle rad", turretSys.calculateTargetAzimuthAngleShooting());
+		//SmartDashboard.putNumber("target azimuth angle rad", turretSys.calculateTargetAzimuthAngleShooting());
 		SmartDashboard.putNumberArray("turret pose", new double[] {
 				turretSys.getTurretPose().getTranslation().getX(),
 				turretSys.getTurretPose().getTranslation().getY() });
@@ -290,13 +312,14 @@ public class RobotContainer {
 		SmartDashboard.putBoolean("is Firing", turretSys.getIsFiring());
 		SmartDashboard.putNumber("flywheel offset RPM", turretSys.getFlywheelOffsetRPM());
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
-
+		SmartDashboard.putNumber("current hood angle", turretSys.getCurrentHoodAngleRad());
 		// indexer info
 		SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
-		SmartDashboard.putNumber("spindexer RPM", indexerSys.getFloorRollerRPM());
+		SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
+		SmartDashboard.putNumber("hood Offset", turretSys.getHoodOffsetDeg());
 
 		// intake info
-		SmartDashboard.putNumber("actuator position inches", intakeSys.getPivotAngle());
+		SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
 		SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
 
 		// climber info

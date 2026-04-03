@@ -51,9 +51,9 @@ public class IndexerSys extends SubsystemBase {
     towerRollerPID = towerRollerMtr.getClosedLoopController();
 
     
-    towerRollerSparkFlexConfig.inverted(false);
-    rightFloorRollerSparkFlexConfig.inverted(true);
-    leftFloorRollerSparkFlexConfig.inverted(false);
+    towerRollerSparkFlexConfig.inverted(true);
+    rightFloorRollerSparkFlexConfig.inverted(false);
+    leftFloorRollerSparkFlexConfig.inverted(true);
 
     towerRollerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
     rightFloorRollerSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
@@ -92,13 +92,17 @@ public class IndexerSys extends SubsystemBase {
 
     leftFloorRollerSparkFlexConfig.closedLoop
       .p(IndexerConstants.FloorRollerP)
-      .d(IndexerConstants.FloorRollerD);
+      .d(IndexerConstants.FloorRollerD)
+       .feedForward.kS(IndexerConstants.FloorRollerkS)
+      .kV(IndexerConstants.FloorRollerkV);
 
     rightFloorRollerSparkFlexConfig.closedLoop
       .p(IndexerConstants.FloorRollerP)
-      .d(IndexerConstants.FloorRollerD);
-
-    towerRollerMtr.configure(
+      .d(IndexerConstants.FloorRollerD)
+      .feedForward.kS(IndexerConstants.FloorRollerkS)
+      .kV(IndexerConstants.FloorRollerkV);
+     
+      towerRollerMtr.configure(
       towerRollerSparkFlexConfig,
       ResetMode.kResetSafeParameters,
       PersistMode.kPersistParameters);

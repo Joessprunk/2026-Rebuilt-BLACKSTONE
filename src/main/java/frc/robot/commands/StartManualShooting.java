@@ -7,11 +7,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
+import frc.robot.commands.turret.SetManualFlywheelRPM;
+import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.StartAiming;
 import frc.robot.commands.turret.StartFlywheel;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
+import frc.robot.subsystems.drive.SwerveDrive;
 import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -21,19 +24,22 @@ import frc.robot.commands.intake.SetTargetPivotAngle;
 import frc.robot.commands.intake.SetIntakeRollerRPM;
 
 /** An example command that uses an example subsystem. */
-public class StartShootingAuto extends SequentialCommandGroup {
+public class StartManualShooting extends SequentialCommandGroup {
 
-  public StartShootingAuto(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
+  public StartManualShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys, SwerveDrive swerveSys) {
     super(
-        new StartAiming(turretSys),
-        new StartFlywheel(turretSys),
-      //  new WaitUntilCommand(() -> turretSys.isOnTarget()),
-        new WaitUntilCommand(() -> turretSys.isAtSpeed()),
-         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
+        // new LockCmd(swerveSys),
+        new SetManualFlywheelRPM(turretSys, 2000),
+        new SetManualHoodAngle(turretSys, 0),
+        new WaitUntilCommand(() -> turretSys.isAtManualSpeed()),
+        
+        new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        new WaitCommand(0.1),
-        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
+        new WaitCommand(2.0),
+        new SetTargetPivotAngle(intakeSys, 10)
+        
+
     );
   }
 }

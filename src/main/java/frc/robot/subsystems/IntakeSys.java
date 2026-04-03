@@ -13,6 +13,9 @@ import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
 
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CANDevices;
 import frc.robot.Constants.IntakeConstants;
@@ -27,7 +30,7 @@ public class IntakeSys extends SubsystemBase {
   private final RelativeEncoder rightRollerEnc;
   private final RelativeEncoder intakePivotEnc;
 
-  private final SparkClosedLoopController intakePivotPID;
+  private final ProfiledPIDController intakePivotPID;
   private final SparkClosedLoopController leftRollerPID;
   private final SparkClosedLoopController rightRollerPID;
 
@@ -37,8 +40,12 @@ public class IntakeSys extends SubsystemBase {
   public IntakeSys() {
     intakePivotMtr = new SparkFlex(CANDevices.intakePivotMtrID, MotorType.kBrushless);
     SparkFlexConfig intakePivotMtrSparkFlexConfig = new SparkFlexConfig();
-    intakePivotPID = intakePivotMtr.getClosedLoopController();
+    //intakePivotPID = intakePivotMtr.getClosedLoopController();
+    intakePivotPID = new ProfiledPIDController(IntakeConstants.intakePivotP, 0.0, IntakeConstants.intakePivotD, 
+    new TrapezoidProfile.Constraints(IntakeConstants.pivotMaxVelocityDegreesPerSec, IntakeConstants.pivotMaxAccelDegreesPerSec));
     intakePivotEnc = intakePivotMtr.getEncoder();
+
+   
 
     leftRollerMtr = new SparkFlex(CANDevices.leftRollerMtrID, MotorType.kBrushless);
     SparkFlexConfig leftRollerMtrSparkFlexConfig = new SparkFlexConfig();
@@ -90,9 +97,7 @@ public class IntakeSys extends SubsystemBase {
 
     intakePivotMtrSparkFlexConfig.closedLoop
       .p(IntakeConstants.intakePivotP)
-      .d(IntakeConstants.intakePivotD).feedForward
-      .kS(IntakeConstants.intakePivotkS)
-      .kV(IntakeConstants.intakePivotkV);
+      .d(IntakeConstants.intakePivotD);
 
     rightRollerMtrSparkFlexConfig.closedLoop
       .p(IntakeConstants.RollerP)
@@ -124,11 +129,15 @@ public class IntakeSys extends SubsystemBase {
   }
 
   public void periodic() {
-    
+    if(DriverStation.isDisabled()){
+      intakePivotPID.setGoal(getPivotAngle());
+    }else{
+    intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
+    }
   }
 
   public void setTargetPivotAngle(double targetAngle) {
-      intakePivotPID.setSetpoint(targetAngle, ControlType.kPosition);
+      intakePivotPID.setGoal(targetAngle);
   }
 
   public double getPivotAngle() {
@@ -136,7 +145,7 @@ public class IntakeSys extends SubsystemBase {
   }
 
   public void resetPivotAngle () {
-    intakePivotEnc.setPosition(0.0);
+    intakePivotEnc.setPosition(120.0);
   }
   public void setTargetRollerRPM(double targetRollerRPM) {
     if (targetRollerRPM != 0.0) {
