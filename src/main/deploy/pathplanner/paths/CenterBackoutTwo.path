@@ -3,45 +3,61 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.5426555555555554,
-        "y": 0.6327193181804922
+        "x": 2.6961777777777773,
+        "y": 4.025255555555555
       },
       "prevControl": null,
       "nextControl": {
-        "x": 0.5897788232300241,
-        "y": 1.1054881251919513
+        "x": 2.2187,
+        "y": 4.960722222222222
       },
       "isLocked": false,
-      "linkedName": "Depot"
+      "linkedName": "center"
     },
     {
       "anchor": {
-        "x": 1.12,
-        "y": 3.0
+        "x": 0.6206111111111112,
+        "y": 4.882766666666666
       },
       "prevControl": {
-        "x": 1.1406136363636366,
-        "y": 1.4036931818181826
+        "x": 0.9627009855246194,
+        "y": 4.911274156201122
+      },
+      "nextControl": {
+        "x": 0.3714746715498911,
+        "y": 4.8620052967032334
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 0.4647000000000001,
+        "y": 6.968077777777778
+      },
+      "prevControl": {
+        "x": 0.4354666666666669,
+        "y": 5.194588888888889
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightClimb"
+      "linkedName": "centerTwo"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.887537993920974,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 1.0,
+      "rotationDegrees": 90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9412780656303973,
-      "maxWaypointRelativePos": 1.0,
+      "minWaypointRelativePos": 1.2570135746605815,
+      "maxWaypointRelativePos": 2.0,
       "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 2.5,
+        "maxVelocity": 1.0,
+        "maxAcceleration": 1.5,
         "maxAngularVelocity": 240.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -52,15 +68,10 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ClimberUp",
-      "waypointRelativePos": 0.1036269430051813,
+      "name": "StartIntaking",
+      "waypointRelativePos": 1.5,
       "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "ClimberUp"
-        }
-      }
+      "command": null
     }
   ],
   "globalConstraints": {
@@ -73,13 +84,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 90.62959860841026
   },
   "reversed": false,
-  "folder": "Old Paths",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 85.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

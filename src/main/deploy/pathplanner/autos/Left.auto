@@ -7,31 +7,25 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightTrenchToMidline"
+            "pathName": "LeftOutOne"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "MidlineToRightTrenchThrough"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightTrenchToDepot"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StartShooting"
+            "pathName": "LeftOutTwo"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Old Autos",
+  "folder": null,
   "choreoAuto": false
 }

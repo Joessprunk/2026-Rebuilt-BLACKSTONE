@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.turret.StopAiming;
 import frc.robot.commands.turret.StopFlywheel;
+import frc.robot.commands.turret.ToggleIsPassingFalse;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
@@ -17,10 +18,11 @@ import frc.robot.commands.indexer.SetTowerRollerRPM;
 import frc.robot.commands.intake.SetIntakeRollerRPM;
 
 /** An example command that uses an example subsystem. */
-public class StopShooting extends SequentialCommandGroup {
+public class StopPassing extends SequentialCommandGroup {
 
-  public StopShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
+  public StopPassing(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
+        new ToggleIsPassingFalse(turretSys), 
        // new StopAiming(turretSys), MAKE DRIVE CHASSIS BASED
         new StopFlywheel(turretSys),
         new SetFloorRollerRPM(indexerSys, 0.0),

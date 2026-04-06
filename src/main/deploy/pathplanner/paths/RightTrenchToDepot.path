@@ -62,7 +62,7 @@
     "rotation": 85.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Old Paths",
   "idealStartingState": {
     "velocity": 1.5,
     "rotation": 0.0

@@ -12,10 +12,13 @@ import frc.robot.Constants.SwerveDriveConstants;
 import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.StartIntaking;
 import frc.robot.commands.StartManualShooting;
+import frc.robot.commands.StartPassing;
 import frc.robot.commands.StartShooting;
 import frc.robot.commands.StartShootingAuto;
+import frc.robot.commands.StartVomiting;
 import frc.robot.commands.StopIntaking;
 import frc.robot.commands.StopManualShooting;
+import frc.robot.commands.StopPassing;
 import frc.robot.commands.StopShooting;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.LockCmd;
@@ -31,7 +34,6 @@ import frc.robot.commands.turret.IncrementFlywheelOffset;
 import frc.robot.commands.turret.SetManualFlywheelRPM;
 import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.StopManualFlywheelRPM;
-import frc.robot.commands.turret.ToggleIsPassing;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
@@ -85,9 +87,10 @@ public class RobotContainer {
 
 		// register named commands
 		NamedCommands.registerCommand("StartIntaking", new StartIntaking(intakeSys, indexerSys));
-		NamedCommands.registerCommand("StartShooting", new StartShootingAuto(turretSys, indexerSys, intakeSys));
+		NamedCommands.registerCommand("StopIntaking", new StopIntaking(intakeSys, indexerSys));
+		NamedCommands.registerCommand("StartShooting", new StartManualShooting(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("StopShooting", new StopShooting(turretSys, indexerSys, intakeSys));
-
+		NamedCommands.registerCommand("ManualShoot", new StartManualShooting(turretSys, indexerSys, intakeSys));
 		// configure autobuilder
 		try {
 			config = RobotConfig.fromGUISettings();
@@ -115,12 +118,16 @@ public class RobotContainer {
 				swerveDrive);
 
 		// create test autos
-		new PathPlannerAuto("SquigglePathTest");
-		new PathPlannerAuto("TranslationTest");
-		new PathPlannerAuto("TurningWhileMovingTest");
+		//new PathPlannerAuto("SquigglePathTest");
+		//new PathPlannerAuto("TranslationTest");
+		//new PathPlannerAuto("TurningWhileMovingTest");
+		
 
 		// create competition autos
-		new PathPlannerAuto("LoadingStation");
+		//new PathPlannerAuto("LoadingStation");
+		new PathPlannerAuto("Left");
+		new PathPlannerAuto("Right");
+		
 
 		// build auto chooser
 		autoChooser = AutoBuilder.buildAutoChooser("Do Nothing");
@@ -143,73 +150,57 @@ public class RobotContainer {
 				poseEstimator));
 
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
-
-		// driverController
-		// 		.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.tiggerPressedThreshold)
-		// 		.onTrue(new LockCmd(swerveDrive))
-		// 		.onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
-		// 		.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
-
-		// driverController
-		// 		.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
-		// 		.onTrue(new StartIntaking(intakeSys, indexerSys))
-		// 		.onFalse(new SetIntakeRollerRPM(intakeSys, 0));
-
-        
+    
 			driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
 			.onTrue(new StartIntaking(intakeSys, indexerSys))
 			.onFalse(new StopIntaking(intakeSys, indexerSys));
 
 			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys))
 			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+			// .onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+			// .onFalse(new StopShooting(turretSys, indexerSys, intakeSys)); USE ONCE WE HAVE AUTO AIMING WORKING
+
+			driverController.rightBumper()
+			.onTrue(new StartVomiting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+			driverController.leftBumper()
+			.onTrue(new StartPassing(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onFalse(new StopPassing(turretSys, indexerSys, intakeSys));
+
+			driverController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+			driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+
 
 			driverController.back().onTrue(new ResetPivotAngle(intakeSys));
 
+			// for tuning
 			driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
 			driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
 			driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
 			driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
 
-			driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, 120.0));
 			
+			
+
 		
 
 
 
 		// // operator bindings for competition
-		// operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
-		// operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+		 operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+		 operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+		  operatorController.povRight().onTrue(new IncrementHoodOffset(turretSys));
+		 operatorController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+
+		 //operatorController.y().onTrue(new ToggleIsPassing(turretSys));
+		
 		// operatorController.start().onTrue(new ToggleIsPassing(turretSys));
 		
 
 		// operatorController
-		// 		.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.tiggerPressedThreshold)
-		// 		.onTrue(new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM))
-		// 		.onTrue(new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM))
-		// 		.onTrue(new SetManualFlywheelRPM(turretSys, 3500.0))
-		// 		.onFalse(new SetIntakeRollerRPM(intakeSys, 0))
-		// 		.onFalse(new SetFloorRollerRPM(indexerSys, 0))
-		// 		.onFalse(new SetTowerRollerRPM(indexerSys, 0))
-		// 		.onFalse(new StopManualFlywheelRPM(turretSys));
 
-		// operatorController.b().onTrue(new StopManualFlywheelRPM(turretSys));
-		// operatorController.a().onTrue(new SetManualFlywheelRPM(turretSys, 1700.0));
-		// operatorController
-		// .axisGreaterThan(XboxController.Axis.kLeftTrigger.value,
-		// ControllerConstants.tiggerPressedThreshold)
-		// .onTrue(new SetIntakeRollerRPM(intakeSys, IntakeConstants.intakingRollerRPM))
-		// .onTrue(new SetSpindexerRPM(indexerSys,
-		// IndexerConstants.spindexerAgitatingRPM))
-		// .onTrue(new SetTowerRPM(indexerSys, IndexerConstants.towerShootingRPM))
-		// .onFalse(new SetIntakeRollerRPM(intakeSys, 0))
-		// .onFalse(new SetSpindexerRPM(indexerSys, 0))
-		// .onFalse(new SetTowerRPM(indexerSys, 0));
-		// operatorController.b().onTrue(new SetIntakeActuatorInches(intakeSys, 5.0));
-		// operatorController.povRight().onTrue(new SetIntakeActuatorInches(intakeSys,
-		// IntakeConstants.actuatorOutPositionInches));
-		// operatorController.povLeft().onTrue(new SetIntakeActuatorInches(intakeSys,
-		// 6.0));
+	
 
 		// // binding commands for swerve sysID
 		// // driverController.a().onTrue(swerveDrive.driveSysIdDynamicForward());
@@ -257,10 +248,10 @@ public class RobotContainer {
 		// operatorController.a().onTrue(new SetIntakeRollerRPM(intakeSys, 500.0));
 
 		// // intake pivot position control bindings for testing
-		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 25.0));
-		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 50.0));
+		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 50.0));
+		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 80.0));
 		// operatorController.x().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
-		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,110.0));
+		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,120.0));
 		// operatorController.start().onTrue(new ResetPivotAngle(intakeSys));
 
 		
@@ -297,9 +288,9 @@ public class RobotContainer {
 		// turretSys.getAzimuthManualTargetDeg());
 		
 		//SmartDashboard.putNumber("target azimuth angle rad", turretSys.calculateTargetAzimuthAngleShooting());
-		SmartDashboard.putNumberArray("turret pose", new double[] {
-				turretSys.getTurretPose().getTranslation().getX(),
-				turretSys.getTurretPose().getTranslation().getY() });
+		// SmartDashboard.putNumberArray("turret pose", new double[] {
+		// 		turretSys.getTurretPose().getTranslation().getX(),
+		// 		turretSys.getTurretPose().getTranslation().getY() });
 		SmartDashboard.putBoolean("is Aiming", turretSys.getIsAiming());
 		SmartDashboard.putBoolean("is Passing", turretSys.getIsPassing());
 		

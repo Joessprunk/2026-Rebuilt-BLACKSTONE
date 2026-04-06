@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
 import frc.robot.commands.turret.SetManualFlywheelRPM;
 import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.StartAiming;
-import frc.robot.commands.turret.StartFlywheel;
+import frc.robot.commands.turret.StartFlywheelAndHood;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
@@ -26,7 +26,7 @@ import frc.robot.commands.intake.SetIntakeRollerRPM;
 /** An example command that uses an example subsystem. */
 public class StartManualShooting extends SequentialCommandGroup {
 
-  public StartManualShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys, SwerveDrive swerveSys) {
+  public StartManualShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
         // new LockCmd(swerveSys),
         new SetManualFlywheelRPM(turretSys, 2000),
@@ -36,7 +36,7 @@ public class StartManualShooting extends SequentialCommandGroup {
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        new WaitCommand(2.0),
+        new WaitCommand(1.5), // 2.0 works idk why others dont...
         new SetTargetPivotAngle(intakeSys, 10)
         
 

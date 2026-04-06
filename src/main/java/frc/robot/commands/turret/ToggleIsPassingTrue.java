@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSys;
 
 /** An example command that uses an example subsystem. */
-public class ToggleIsPassing extends Command {
+public class ToggleIsPassingTrue extends Command {
   
   private final TurretSys turretSys;
 
-  public ToggleIsPassing(TurretSys turretSys) {
+  public ToggleIsPassingTrue(TurretSys turretSys) {
     this.turretSys = turretSys;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turretSys);
@@ -21,11 +21,7 @@ public class ToggleIsPassing extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(turretSys.getIsPassing()) {
-      turretSys.setIsPassing(false);
-    } else {
       turretSys.setIsPassing(true);
-    }
   }
 
   // Called every time the scheduler runs while the command is scheduled.

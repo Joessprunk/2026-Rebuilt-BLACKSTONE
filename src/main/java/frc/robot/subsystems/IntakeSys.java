@@ -31,6 +31,7 @@ public class IntakeSys extends SubsystemBase {
   private final RelativeEncoder intakePivotEnc;
 
   private final ProfiledPIDController intakePivotPID;
+  //private final SparkClosedLoopController intakePivotPID;
   private final SparkClosedLoopController leftRollerPID;
   private final SparkClosedLoopController rightRollerPID;
 
@@ -41,8 +42,8 @@ public class IntakeSys extends SubsystemBase {
     intakePivotMtr = new SparkFlex(CANDevices.intakePivotMtrID, MotorType.kBrushless);
     SparkFlexConfig intakePivotMtrSparkFlexConfig = new SparkFlexConfig();
     //intakePivotPID = intakePivotMtr.getClosedLoopController();
-    intakePivotPID = new ProfiledPIDController(IntakeConstants.intakePivotP, 0.0, IntakeConstants.intakePivotD, 
-    new TrapezoidProfile.Constraints(IntakeConstants.pivotMaxVelocityDegreesPerSec, IntakeConstants.pivotMaxAccelDegreesPerSec));
+     intakePivotPID = new ProfiledPIDController(IntakeConstants.intakePivotP, 0.0, IntakeConstants.intakePivotD, 
+     new TrapezoidProfile.Constraints(IntakeConstants.pivotMaxVelocityDegreesPerSec, IntakeConstants.pivotMaxAccelDegreesPerSec));
     intakePivotEnc = intakePivotMtr.getEncoder();
 
    
@@ -97,7 +98,10 @@ public class IntakeSys extends SubsystemBase {
 
     intakePivotMtrSparkFlexConfig.closedLoop
       .p(IntakeConstants.intakePivotP)
-      .d(IntakeConstants.intakePivotD);
+      .d(IntakeConstants.intakePivotD)
+      .feedForward
+      .kS(IntakeConstants.intakePivotkS)
+      .kV(IntakeConstants.intakePivotkV);
 
     rightRollerMtrSparkFlexConfig.closedLoop
       .p(IntakeConstants.RollerP)
@@ -129,15 +133,16 @@ public class IntakeSys extends SubsystemBase {
   }
 
   public void periodic() {
-    if(DriverStation.isDisabled()){
+     if(DriverStation.isDisabled()){
       intakePivotPID.setGoal(getPivotAngle());
-    }else{
-    intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
-    }
+     }else{
+     intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
+     }
   }
 
   public void setTargetPivotAngle(double targetAngle) {
       intakePivotPID.setGoal(targetAngle);
+      //intakePivotPID.setSetpoint(targetAngle, ControlType.kPosition);
   }
 
   public double getPivotAngle() {
@@ -145,7 +150,7 @@ public class IntakeSys extends SubsystemBase {
   }
 
   public void resetPivotAngle () {
-    intakePivotEnc.setPosition(120.0);
+    intakePivotEnc.setPosition(0.0);
   }
   public void setTargetRollerRPM(double targetRollerRPM) {
     if (targetRollerRPM != 0.0) {

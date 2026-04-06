@@ -7,19 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightTrenchToMidline"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MidlineToRightTrenchThrough"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightTrenchToDepot"
+            "pathName": "RightOutOne"
           }
         },
         {
@@ -27,11 +15,29 @@
           "data": {
             "name": "StartShooting"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 5.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RightOutTwo"
+          }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Old Autos",
+  "folder": null,
   "choreoAuto": false
 }

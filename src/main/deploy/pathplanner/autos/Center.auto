@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightTrenchToMidline"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "MidlineToRightTrench"
+            "pathName": "CenterBackout"
           }
         },
         {
@@ -25,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.25
+            "waitTime": 2.0
           }
         },
         {
@@ -37,19 +31,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RightTrenchToCloseFuel"
+            "pathName": "CenterBackoutTwo"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CloseFuelToRightTrenchThrough"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightTrenchToClimb"
+            "pathName": "CenterBackoutThree"
           }
         },
         {
@@ -61,31 +49,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ClimberDown"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
+            "waitTime": 5.0
           }
         },
         {
           "type": "named",
           "data": {
             "name": "StopShooting"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CenterBackoutFour"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Old Autos",
+  "folder": null,
   "choreoAuto": false
 }

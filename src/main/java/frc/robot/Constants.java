@@ -57,27 +57,28 @@ public final class Constants {
         public static final int pigeonID = 14;
 
         public static final int frModuleCANCoderID = 2;
-        public static final int frModuleDriveMtrID = 6;
-        public static final int frModuleSteerMtrID = 10;
+        public static final int frModuleDriveMtrID = 6;  //dead
+        public static final int frModuleSteerMtrID = 10; //dead
 
         public static final int brModuleCANCoderID = 3;
         public static final int brModuleDriveMtrID = 7;
         public static final int brModuleSteerMtrID = 11;
 
         public static final int flModuleCANCoderID = 4;
-        public static final int flModuleDriveMtrID = 8;
-        public static final int flModuleSteerMtrID = 12;
+        public static final int flModuleDriveMtrID = 8; //dead
+        public static final int flModuleSteerMtrID = 12;//dead
 
-        public static final int blModuleCANCoderID = 5;
-        public static final int blModuleDriveMtrID = 9;
+        public static final int blModuleCANCoderID = 5; 
+        public static final int blModuleDriveMtrID = 9; //dead
+        
         public static final int blModuleSteerMtrID = 13;
 
-        public static final int intakePivotMtrID = 15;
-        public static final int leftRollerMtrID = 16;
-        public static final int rightRollerMtrID = 17;
+        public static final int intakePivotMtrID = 15; //dead
+        public static final int leftRollerMtrID = 16;  //dead
+        public static final int rightRollerMtrID = 17;//dead
 
         public static final int towerRollerMtrID = 19;
-        public static final int leftFloorRollerMtrID = 20;
+        public static final int leftFloorRollerMtrID = 20;//good
         public static final int rightFloorRollerMtrID = 21;
 
 
@@ -203,15 +204,8 @@ public final class Constants {
     }
 
     public class IntakeConstants {
-        public static final int maxRollerCurrentAmps = 45;
+        public static final int maxRollerCurrentAmps = 60;
         public static final int maxPivotCurrentAmps = 50;
-
-        public static final double ActuatorPulleyToothCount = 18.0;
-        public static final double actuatorPositionConversionFactor = 0.95; // Units.metersToInches(ActuatorPulleyToothCount
-                                                                            // * 5.0) / 5.0; // convertInches(tooth *
-                                                                            // pitch) / ratio
-        public static final double actuatorVelocityConversionFactor = 0.95 / 60;// Units.metersToInches(ActuatorPulleyToothCount
-        // * 5.0) / 5.0 /60.0;
 
         public static final double rollerPositionConversionFactor = 1.0;
         public static final double rollerVelocityConversionFactor = 1.0;
@@ -219,14 +213,16 @@ public final class Constants {
         public static final double intakePivotMinAngle = -10.0;
         public static final double intakePivotMaxAngle = 150.0;
 
-        public static final double intakingPivotAngle = 120.0;
-        public static final double PivotBufferPositionAngle = 90.0;
+        public static final double intakingPivotAngle = 150.0;
+        public static final double PivotBufferPositionAngle = 40.0;
 
-        public static final double intakePivotP = 0.01; // 0.0010;
-        public static final double intakePivotD = 0.0; // 0.0002;
+        public static final double intakePivotP = 0.03; // 0.01;
+        public static final double intakePivotD = 0.0; 
+        public static final double intakePivotkS = 0.0;
+        public static final double intakePivotkV = 0.0;
 
-        public static final double pivotMaxAccelDegreesPerSec = 90.0;
-        public static final double pivotMaxVelocityDegreesPerSec = 70.0;
+        public static final double pivotMaxAccelDegreesPerSec = 360.0;//200.0;
+        public static final double pivotMaxVelocityDegreesPerSec = 170.0;//130.0;
         
 
         public static final double RollerP = 0.00008;// 0.015;
@@ -234,12 +230,14 @@ public final class Constants {
         public static final double RollerkS = 0.35;// 2.5;
         public static final double RollerkV = 0.00179;   // 0.00175;
         
-        public static final double RollerIntakingRPM = 4000.0;
-        public static final double RollerShootingRPM = 2500.0;
+        public static final double RollerIntakingRPM = 6000.0;
+        public static final double RollerShootingRPM = 3000.0;
 
         public static final double intakePivotPositionConversionFactor = 360.0 / 25.0;
         public static final double intakePivotVelocityConversionFactor = 360.0 / 25.0;
         public static final double stowedPivotAngle = 0;
+        public static final double RollerVomitingRPM = 3000;
+        
         
         
         
@@ -296,6 +294,11 @@ public final class Constants {
         public static final double hoodkS = 0.2;
         public static final double hoodkG = 0.01;
         public static final double hoodDefaultSetpointAngleDeg = 0.0;
+
+
+        public static final double hoodZerothDegreeFitConstant = 10.0;
+        public static final double hoodFirstDegreeFitConstant = 0;
+        public static final double hoodSecondDegreeFitConstant = 0;
     }
 
     
@@ -322,6 +325,8 @@ public final class Constants {
 
         public static final double towerRollerShootingRPM = 200.0;
         public static final double floorRollerShootingRPM = 250.0;
+        public static final double towerRollerVomitingRPM = 1000;
+        public static final double floorRollerVomitingRPM = 1000;
         
     }
 }
