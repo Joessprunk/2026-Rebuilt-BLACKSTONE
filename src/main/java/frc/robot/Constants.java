@@ -210,7 +210,7 @@ public final class Constants {
         public static final double intakePivotMinAngle = -10.0;
         public static final double intakePivotMaxAngle = 150.0;
 
-        public static final double intakingPivotAngle = 150.0;
+        public static final double intakingPivotAngle = 137.0;
         public static final double PivotBufferPositionAngle = 40.0;
 
         public static final double intakePivotP = 0.03; // 0.01;
@@ -254,11 +254,11 @@ public final class Constants {
         public static final double flyWheelPositionConversionFactorRot = 1.0;
         public static final double flyWheelVelocityConversionFactorRPM = 1.0;
 
-        public static final double zerothDegreeFitConstant = 1166.0;
-        public static final double firstDegreeFitConstant = 308.0;
-        public static final double secondDegreeFitConstant = -6.09;
+        public static final double zerothDegreeFitConstant = 1570.0;
+        public static final double firstDegreeFitConstant = 170.0;
+        public static final double secondDegreeFitConstant = 5.95;
 
-        public static final double flywheelOffsetRPMIncrement = 30.0;
+        public static final double flywheelOffsetRPMIncrement = 10.0;
 
         public static final Pose2d targetPoseBlue = new Pose2d(4.62, 4.04, null);
         public static final Pose2d targetPoseRed = new Pose2d(11.915, 4.035, null);
@@ -286,9 +286,9 @@ public final class Constants {
         public static final double hoodDefaultSetpointAngleDeg = 0.0;
 
 
-        public static final double hoodZerothDegreeFitConstant = 10.0;
-        public static final double hoodFirstDegreeFitConstant = 0;
-        public static final double hoodSecondDegreeFitConstant = 0;
+        public static final double hoodZerothDegreeFitConstant = -5.8;
+        public static final double hoodFirstDegreeFitConstant = 5.79;
+        public static final double hoodSecondDegreeFitConstant = -0.382;
     }
 
     
@@ -313,8 +313,8 @@ public final class Constants {
         public static final double FloorPositionConversionFactor = 1.0 / 5.0;
         public static final double FloorVelocityConversionFactor = 1.0 / 5.0;
 
-        public static final double towerRollerShootingRPM = 200.0;
-        public static final double floorRollerShootingRPM = 250.0;
+        public static final double towerRollerShootingRPM = 1000.0;
+        public static final double floorRollerShootingRPM = 1100.0;
         public static final double towerRollerVomitingRPM = 1000;
         public static final double floorRollerVomitingRPM = 1000;
         

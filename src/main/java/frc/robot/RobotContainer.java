@@ -159,8 +159,8 @@ public class RobotContainer {
 			.onFalse(new StopIntaking(intakeSys, indexerSys));
 
 			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys))
-			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+			.onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
 			// .onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
 			// .onFalse(new StopShooting(turretSys, indexerSys, intakeSys)); USE ONCE WE HAVE AUTO AIMING WORKING
 
@@ -175,13 +175,11 @@ public class RobotContainer {
 			driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
 
 
-			driverController.back().onTrue(new ResetPivotAngle(intakeSys));
-
 			// for tuning
-			driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
-			driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
-			driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
-			driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
+			// driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+			// driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+			// driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+			// driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
 
 			
 			
@@ -195,6 +193,14 @@ public class RobotContainer {
 		 operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
 		  operatorController.povRight().onTrue(new IncrementHoodOffset(turretSys));
 		 operatorController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+
+		 operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
+
+		 operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+		 operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+
+
+		 
 
 		 //operatorController.y().onTrue(new ToggleIsPassing(turretSys));
 		
@@ -301,6 +307,7 @@ public class RobotContainer {
 		// turret flywheel
 		SmartDashboard.putNumber("flywheel current RPM", turretSys.getFlywheelRPM());
 		SmartDashboard.putNumber("flywheel target RPM", turretSys.calculateTargetFlywheelRPM());
+		SmartDashboard.putNumber("Hood Target Angle", turretSys.calculateTargetHoodAngle());
 		SmartDashboard.putNumber("flywheel manual rpm", turretSys.getManualFlywheelRPM());
 		SmartDashboard.putNumber("distance to target", turretSys.calculateDistanceToTarget());
 		SmartDashboard.putBoolean("is Firing", turretSys.getIsFiring());

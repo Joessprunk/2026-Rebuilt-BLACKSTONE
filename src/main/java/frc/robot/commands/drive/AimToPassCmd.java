@@ -12,7 +12,7 @@ import frc.robot.Constants.TurretConstants;
 import frc.robot.subsystems.drive.PoseEstimator;
 import frc.robot.subsystems.drive.SwerveDrive;
 
-public class AimToHubCmd extends Command {
+public class AimToPassCmd extends Command {
 
     /**
      * Command to allow for driver input in teleop
@@ -36,7 +36,7 @@ public class AimToHubCmd extends Command {
      * <p>ArcadeDriveCmd is used to control the swerve drive base with arcade drive.
      * 
      */
-    public AimToHubCmd(SwerveDrive swerveSys, PoseEstimator poseEstimator) {
+    public AimToPassCmd(SwerveDrive swerveSys, PoseEstimator poseEstimator) {
         this.swerveSys = swerveSys;
         this.poseEstimator = poseEstimator;
 
@@ -61,25 +61,13 @@ public class AimToHubCmd extends Command {
     public void execute() {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
             swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(
-                    poseEstimator.getPose().getRotation().getDegrees(),    
-                    TurretConstants.targetPoseBlue.getTranslation()
-                    .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                thetaController.calculate(180.0)));
         } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
            swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(
-                    poseEstimator.getPose().getRotation().getDegrees(),    
-                    TurretConstants.targetPoseRed.getTranslation()
-                    .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                thetaController.calculate(0.0)));
         } else {
           swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(
-                    poseEstimator.getPose().getRotation().getDegrees(),    
-                    TurretConstants.targetPoseBlue.getTranslation()
-                    .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                thetaController.calculate(0.0)));
         }
     }
     
