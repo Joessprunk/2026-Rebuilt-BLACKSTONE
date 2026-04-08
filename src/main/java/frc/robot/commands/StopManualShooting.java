@@ -7,7 +7,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.turret.StopAiming;
-import frc.robot.commands.turret.StopFlywheel;
+import frc.robot.commands.turret.StopFlywheelAndHood;
 import frc.robot.commands.turret.StopManualFlywheelRPM;
 import frc.robot.commands.turret.StopManualHoodAngle;
 import frc.robot.subsystems.IndexerSys;

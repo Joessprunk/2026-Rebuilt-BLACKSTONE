@@ -8,11 +8,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.TurretSys;
 
 /** An example command that uses an example subsystem. */
-public class StopFlywheel extends Command {
+public class StopFlywheelAndHood extends Command {
   
   private final TurretSys turretSys;
 
-  public StopFlywheel(TurretSys turretSys) {
+  public StopFlywheelAndHood(TurretSys turretSys) {
     this.turretSys = turretSys;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(turretSys);

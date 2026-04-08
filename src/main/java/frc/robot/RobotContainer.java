@@ -15,12 +15,14 @@ import frc.robot.commands.StartManualShooting;
 import frc.robot.commands.StartPassing;
 import frc.robot.commands.StartShooting;
 import frc.robot.commands.StartShootingAuto;
+import frc.robot.commands.StartStealing;
 import frc.robot.commands.StartVomiting;
 import frc.robot.commands.StopIntaking;
 import frc.robot.commands.StopManualShooting;
 import frc.robot.commands.StopPassing;
 import frc.robot.commands.StopShooting;
 import frc.robot.commands.drive.AimToHubCmd;
+import frc.robot.commands.drive.AimToPassCmd;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.LockCmd;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
@@ -89,7 +91,7 @@ public class RobotContainer {
 		// register named commands
 		NamedCommands.registerCommand("StartIntaking", new StartIntaking(intakeSys, indexerSys));
 		NamedCommands.registerCommand("StopIntaking", new StopIntaking(intakeSys, indexerSys));
-		NamedCommands.registerCommand("StartShooting", new StartManualShooting(turretSys, indexerSys, intakeSys));
+		NamedCommands.registerCommand("StartShooting", new StartShootingAuto(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("StopShooting", new StopShooting(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("ManualShoot", new StartManualShooting(turretSys, indexerSys, intakeSys));
 		// configure autobuilder
@@ -128,6 +130,7 @@ public class RobotContainer {
 		//new PathPlannerAuto("LoadingStation");
 		new PathPlannerAuto("Left");
 		new PathPlannerAuto("Right");
+		new PathPlannerAuto("OtherLeft");
 		
 
 		// build auto chooser
@@ -150,7 +153,7 @@ public class RobotContainer {
 			swerveDrive,
 			poseEstimator));
 
-		driverController.a().whileTrue(new AimToHubCmd(swerveDrive, poseEstimator));
+		
 
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
     
@@ -159,20 +162,25 @@ public class RobotContainer {
 			.onFalse(new StopIntaking(intakeSys, indexerSys));
 
 			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onTrue(new StartShooting(turretSys, indexerSys, intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
 			.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
-			// .onTrue(new StartShooting(turretSys, indexerSys, intakeSys, swerveDrive))
-			// .onFalse(new StopShooting(turretSys, indexerSys, intakeSys)); USE ONCE WE HAVE AUTO AIMING WORKING
 
 			driverController.rightBumper()
-			.onTrue(new StartVomiting(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onTrue(new StartVomiting(turretSys, indexerSys, intakeSys))
 			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 			driverController.leftBumper()
-			.onTrue(new StartPassing(turretSys, indexerSys, intakeSys, swerveDrive))
+			.onTrue(new StartPassing(turretSys, indexerSys /*swerveDrive, poseEstimator*/))
 			.onFalse(new StopPassing(turretSys, indexerSys, intakeSys));
 
-			driverController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
-			driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+			driverController.a()
+			.onTrue(new StartStealing(turretSys, indexerSys, intakeSys))
+			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+
+			// driverController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+			// driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+
+			// driverController.x().onTrue(new AimToHubCmd(swerveDrive, poseEstimator));
+			// driverController.y().onTrue(new AimToPassCmd(swerveDrive, poseEstimator));
 
 
 			// for tuning
@@ -198,6 +206,7 @@ public class RobotContainer {
 
 		 operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
 		 operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+		 operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
 
 
 		 

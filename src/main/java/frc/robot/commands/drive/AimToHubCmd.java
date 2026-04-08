@@ -46,7 +46,7 @@ public class AimToHubCmd extends Command {
                 Constants.SwerveDriveConstants.autoAimOmegaMaxRadPerSec,
                 Constants.SwerveDriveConstants.autoAimOmegaDotMaxDegPerSecSq));
 
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        thetaController.enableContinuousInput(-180, 180);
 
         addRequirements(swerveSys, poseEstimator);
     }
@@ -65,21 +65,21 @@ public class AimToHubCmd extends Command {
                     poseEstimator.getPose().getRotation().getDegrees(),    
                     TurretConstants.targetPoseBlue.getTranslation()
                     .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                    .getAngle().getDegrees() + 180.0)));
         } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
            swerveSys.setOmegaOverrideRadPerSec(Optional.of(
                 thetaController.calculate(
                     poseEstimator.getPose().getRotation().getDegrees(),    
                     TurretConstants.targetPoseRed.getTranslation()
                     .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                    .getAngle().getDegrees() + 180.0)));
         } else {
           swerveSys.setOmegaOverrideRadPerSec(Optional.of(
                 thetaController.calculate(
                     poseEstimator.getPose().getRotation().getDegrees(),    
                     TurretConstants.targetPoseBlue.getTranslation()
                     .minus(poseEstimator.getPose().getTranslation())
-                    .getAngle().getDegrees())));
+                    .getAngle().getDegrees() + 180.0)));
         }
     }
     

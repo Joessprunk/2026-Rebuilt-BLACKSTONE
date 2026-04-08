@@ -52,13 +52,13 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "ClimberUp",
+      "name": "",
       "waypointRelativePos": 0.1036269430051813,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "ClimberUp"
+          "name": null
         }
       }
     }

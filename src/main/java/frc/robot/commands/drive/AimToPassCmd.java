@@ -46,7 +46,7 @@ public class AimToPassCmd extends Command {
                 Constants.SwerveDriveConstants.autoAimOmegaMaxRadPerSec,
                 Constants.SwerveDriveConstants.autoAimOmegaDotMaxDegPerSecSq));
 
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
+        thetaController.enableContinuousInput(-180, 180);
 
         addRequirements(swerveSys, poseEstimator);
     }
@@ -61,13 +61,13 @@ public class AimToPassCmd extends Command {
     public void execute() {
         if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Blue) {
             swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(180.0)));
+                thetaController.calculate(poseEstimator.getPose().getRotation().getDegrees(),  180.0)));
         } else if (DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red) {
            swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(0.0)));
+                thetaController.calculate(poseEstimator.getPose().getRotation().getDegrees(),  0.0)));
         } else {
           swerveSys.setOmegaOverrideRadPerSec(Optional.of(
-                thetaController.calculate(0.0)));
+                thetaController.calculate(poseEstimator.getPose().getRotation().getDegrees(),  0.0)));
         }
     }
     

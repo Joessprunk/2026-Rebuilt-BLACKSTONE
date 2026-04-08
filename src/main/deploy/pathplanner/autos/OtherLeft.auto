@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftOutOne"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopIntaking"
+            "pathName": "OtherLeftOneOut"
           }
         },
         {
@@ -25,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 2.25
           }
         },
         {
@@ -44,6 +38,24 @@
           "type": "path",
           "data": {
             "pathName": "LeftOutTwo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.25
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
           }
         }
       ]

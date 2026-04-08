@@ -12,10 +12,12 @@ import frc.robot.commands.turret.StartFlywheelAndHood;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
+import frc.robot.subsystems.drive.PoseEstimator;
 import frc.robot.subsystems.drive.SwerveDrive;
 import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
+import frc.robot.commands.drive.AimToHubCmd;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
 import frc.robot.commands.indexer.SetTowerRollerRPM;
 import frc.robot.commands.intake.SetTargetPivotAngle;
@@ -24,13 +26,11 @@ import frc.robot.commands.intake.SetIntakeRollerRPM;
 /** An example command that uses an example subsystem. */
 public class StartShooting extends SequentialCommandGroup {
 
-  public StartShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys, SwerveDrive swerveSys) {
+  public StartShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/) {
     super(
         // new LockCmd(swerveSys),
-        // new StartAiming(turretSys), TODO: THIS SHOULD BE SWITCHED TO DRIVE CHASSIS AIMING
-        new StartFlywheelAndHood(turretSys), // TODO: should include hood angle 
-        
-       // new WaitUntilCommand(() -> turretSys.isOnTarget()), ALSO MAYBE SWITCH TO DRIVE CHASSIS AIMING
+        //new AimToHubCmd(swerveSys, poseEstimator),
+        new StartFlywheelAndHood(turretSys), 
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
