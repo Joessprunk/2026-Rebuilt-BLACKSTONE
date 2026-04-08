@@ -20,6 +20,7 @@ import frc.robot.commands.StopIntaking;
 import frc.robot.commands.StopManualShooting;
 import frc.robot.commands.StopPassing;
 import frc.robot.commands.StopShooting;
+import frc.robot.commands.drive.AimToHubCmd;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.LockCmd;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
@@ -142,12 +143,14 @@ public class RobotContainer {
 	private void configureBindings() {
 		// driver controls for competition
 		swerveDrive.setDefaultCommand(new ArcadeDriveCmd(
-				() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
-				() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband),
-				() -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.joystickDeadband),
-				true,
-				swerveDrive,
-				poseEstimator));
+			() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+			() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband),
+			() -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.joystickDeadband),
+			true,
+			swerveDrive,
+			poseEstimator));
+
+		driverController.a().whileTrue(new AimToHubCmd(swerveDrive, poseEstimator));
 
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
     

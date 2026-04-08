@@ -122,8 +122,8 @@ public class TurretSys extends SubsystemBase {
         .kV(TurretConstants.flywheelkV);
 
     hoodMtrSparkFlexConfig.closedLoop
-        .p(TurretConstants.hoodP)
-        .d(TurretConstants.hoodD)
+        .p(TurretConstants.hoodkP)
+        .d(TurretConstants.hoodkD)
         .feedForward
         .kS(TurretConstants.hoodkS)
         .kV(TurretConstants.hoodkG);

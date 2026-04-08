@@ -81,9 +81,6 @@ public final class Constants {
         public static final int leftFloorRollerMtrID = 20;//good
         public static final int rightFloorRollerMtrID = 21;
 
-
-
-        
         public static final int leftFlyWheelMtrID = 23;
         public static final int rightFlyWheelMtrID = 24;
 
@@ -182,11 +179,11 @@ public final class Constants {
         public static final double autoRotationKp = 6.0;
         public static final double autoRotationKd = 0.0;
 
-        public static final double autoAimkP = 10.9;
-        public static final double autoAimkD = 0.5;
-        public static final double autoAimTurnSpeedRadPerSec = 2.0 * Math.PI;
-        public static final double autoAimTurnAccelRadPerSecSq = 3.0 * Math.PI;
-        public static final double autoAimToleranceRad = 0.005;
+        public static final double autoAimkP = 5.0;
+        public static final double autoAimkD = 0.0;
+        public static final double autoAimOmegaMaxRadPerSec = 180.0;
+        public static final double autoAimOmegaDotMaxDegPerSecSq = 720.0;
+        public static final double autoAimToleranceDeg = 0.5;
     }
 
     public class VisionConstants {
@@ -237,11 +234,6 @@ public final class Constants {
         public static final double intakePivotVelocityConversionFactor = 360.0 / 25.0;
         public static final double stowedPivotAngle = 0;
         public static final double RollerVomitingRPM = 3000;
-        
-        
-        
-        
-
         // public static final double manualActuatorAdjustmentSpeed = 0.4;
     }
 
@@ -254,8 +246,6 @@ public final class Constants {
         public static final double flywheelkS = 0.3; // increment voltage setpoint until the flywheel moves to find this
                                                      // value
         public static final double flywheelkV = 0.00177;// 0.00215; // calculated from ReCalc
-        
-
         
         public static final double azimuthErrorToleranceDeg = 0.25;
         public static final double HoodDefaultSetpointDeg = 0.0;
@@ -289,8 +279,8 @@ public final class Constants {
         public static final int maxHoodCurrentAmps = 20;
         public static final double maximumHoodAngleDeg = 40.0;
         public static final double minimumHoodAngleDeg = -4.0;
-        public static final double hoodP= 1.015;
-        public static final double hoodD = 0.3;
+        public static final double hoodkP= 1.015;
+        public static final double hoodkD = 0.3;
         public static final double hoodkS = 0.2;
         public static final double hoodkG = 0.01;
         public static final double hoodDefaultSetpointAngleDeg = 0.0;

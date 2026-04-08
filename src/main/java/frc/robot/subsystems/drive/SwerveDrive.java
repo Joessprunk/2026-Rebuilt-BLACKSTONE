@@ -198,9 +198,9 @@ public class SwerveDrive extends SubsystemBase {
     public void driveFieldRelative(double xMetersPerSec, double yMetersPerSec, double omegaRadPerSec, Rotation2d heading) {
         if(omegaOverrideRadPerSec.isPresent()) {
             omegaRadPerSec = omegaOverrideRadPerSec.get();
-           
         }
-         SmartDashboard.putBoolean("Recieved Heading Override", omegaOverrideRadPerSec.isPresent());
+
+        SmartDashboard.putBoolean("Recieved Heading Override", omegaOverrideRadPerSec.isPresent());
         ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSec, yMetersPerSec, omegaRadPerSec, heading);
         driveRobotRelative(chassisSpeeds);
     }

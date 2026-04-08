@@ -14,11 +14,10 @@ public class PoseEstimator extends SubsystemBase {
 
     private final SwerveDrivePoseEstimator poseEstimator;
     private final SwerveDrive swerveDrive;
-    
+
     private boolean trustLimelightOne = true;
     private boolean trustLimelightTwo = true;
     private Field2d field = new Field2d();
-
 
     public PoseEstimator(SwerveDrive swerveDrive) {
 
@@ -44,24 +43,26 @@ public class PoseEstimator extends SubsystemBase {
         // filter and update pose based on vision from limelight one
         LimelightHelpers.SetRobotOrientation(VisionConstants.limelightOneName, poseEstimator.getEstimatedPosition().getRotation().getDegrees(), getAngularVelocityDegPerSec(), 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate limeLightOnePose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.limelightOneName);
+
+        // filter and update pose based on vision from limelight two
+        LimelightHelpers.SetRobotOrientation(VisionConstants.limelightTwoName, poseEstimator.getEstimatedPosition().getRotation().getDegrees(), getAngularVelocityDegPerSec(), 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate limeLightTwoPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.limelightTwoName);
+
         trustLimelightOne = true;
         if(limeLightOnePose == null || limeLightOnePose.tagCount == 0 || swerveDrive.getAngularVelocityDegPerSec() > VisionConstants.angularVelocityDegPerSecThreshold) {
             trustLimelightOne = false;
-        }
-        if(trustLimelightOne) {
+        } else if(limeLightTwoPose.tagCount >= 1) {
+            trustLimelightTwo = false;
+        } if(trustLimelightOne) {
             poseEstimator.addVisionMeasurement(
             limeLightOnePose.pose,
             limeLightOnePose.timestampSeconds);
         }
 
-        // filter and update pose based on vision from limelight two
-        LimelightHelpers.SetRobotOrientation(VisionConstants.limelightTwoName, poseEstimator.getEstimatedPosition().getRotation().getDegrees(), getAngularVelocityDegPerSec(), 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate limeLightTwoPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(VisionConstants.limelightTwoName);
         trustLimelightTwo = true;
         if(limeLightTwoPose == null || limeLightTwoPose.tagCount == 0 || swerveDrive.getAngularVelocityDegPerSec() > VisionConstants.angularVelocityDegPerSecThreshold) {
             trustLimelightTwo = false;
-        }
-        if(trustLimelightTwo) {
+        } if(trustLimelightTwo) {
             poseEstimator.addVisionMeasurement(
             limeLightTwoPose.pose,
             limeLightTwoPose.timestampSeconds);
@@ -81,7 +82,7 @@ public class PoseEstimator extends SubsystemBase {
         // change based on field mirroring
         // DriverStation.getAlliance().isPresent() && DriverStation.getAlliance().get() == Alliance.Red ? Rotation2d.fromDegrees(0) : Rotation2d.fromDegrees(180)));
     }
-    
+
     public Pose2d getPose() {
         return poseEstimator.getEstimatedPosition();
     }
@@ -93,9 +94,9 @@ public class PoseEstimator extends SubsystemBase {
     public double getAngularVelocityDegPerSec() {
         return swerveDrive.getAngularVelocityDegPerSec();
     }
+
     public Field2d getField(){
         field.setRobotPose(getPose());
         return field;
     }
-
 }
