@@ -3,11 +3,14 @@ package frc.robot.subsystems.drive;
 import com.ctre.phoenix6.configs.MountPoseConfigs;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.networktables.StructArrayPublisher;
 import edu.wpi.first.units.measure.Distance;
@@ -52,6 +55,19 @@ public class SwerveDrive extends SubsystemBase {
 
     private Optional<Double> omegaOverrideRadPerSec = Optional.empty();
 
+    private final ProfiledPIDController thetaController =
+    new ProfiledPIDController(
+        4.0,  // kP (tune this)
+        0.0,
+        0.2,  
+        new TrapezoidProfile.Constraints(
+            360.0,  // max velocity (rad/s)
+            720.0  // max accel (rad/s^2)
+        )
+
+       
+    );
+
     public SwerveDrive() {
         modules = new SwerveModule[] {
             new REVSwerveModule(
@@ -77,6 +93,9 @@ public class SwerveDrive extends SubsystemBase {
         };
 
         pigeon = new Pigeon2(CANDevices.pigeonID);
+
+        thetaController.enableContinuousInput(-180.0, 180.0);
+        thetaController.setTolerance(5.0); // degrees
 
         // Modify this to reflect how the Pigeon is mounted
         // Pigeon is mounted upside down
@@ -139,6 +158,34 @@ public class SwerveDrive extends SubsystemBase {
         publisher.set(getModuleStates());
     }
 
+    public double calculateAutoAimOmegaDeg(double currentDeg, double targetDeg) {
+    targetDeg = MathUtil.inputModulus(targetDeg, -180.0, 180.0);
+
+    thetaController.setGoal(targetDeg);
+
+    double outputDegPerSec = thetaController.calculate(currentDeg);
+
+    outputDegPerSec = MathUtil.clamp(outputDegPerSec, -360.0, 360.0);
+
+    if (thetaController.atGoal()) {
+        return 0.0;
+    }
+
+    return outputDegPerSec;
+}
+public void resetAutoAim(double currentDeg) {
+    thetaController.reset(currentDeg);
+}
+
+public void enableAutoAimDeg(double omegaDegPerSec) {
+    setOmegaOverrideRadPerSec(Optional.of(Math.toRadians(omegaDegPerSec)));
+}
+
+public void disableAutoAim() {
+    setOmegaOverrideRadPerSec(Optional.empty());
+}
+   
+
     public Rotation2d getHeading() {
         // reading is negated so that CCW is positive
         return Rotation2d.fromDegrees(pigeon.getYaw().getValueAsDouble());
@@ -158,7 +205,7 @@ public class SwerveDrive extends SubsystemBase {
             // undo skew compensation for correct pose estimation
             SwerveModulePosition positionSkewed = modules[i].getModulePosition();
             positions[i] = new SwerveModulePosition(
-                positionSkewed.distanceMeters, 
+                positionSkewed.distanceMeters,
                 positionSkewed.angle.plus(skewCompensationThetaShift));
         }
         return positions;
@@ -213,7 +260,7 @@ public class SwerveDrive extends SubsystemBase {
         if(chassisSpeeds.vxMetersPerSecond != 0.0 || chassisSpeeds.vyMetersPerSecond != 0.0 || chassisSpeeds.omegaRadiansPerSecond != 0.0) {
             isLocked = false;
         }
-        
+       
         SwerveModuleState[] desiredModuleStates;
 
         if(isLocked) {
@@ -245,7 +292,7 @@ public class SwerveDrive extends SubsystemBase {
      * Counters the skew in lateral motion caused by rotation of the chassis by shifting the direction of
      * the lateral motion by a factor of the angular velocity opposite the skew. The shift is stored as a
      * local variable and should be used to unshift the module angles when applying them to odometry.
-     * 
+     *
      * @param chassisSpeeds The ChassisSpeeds to modify.
      * @return The skew-compensated ChassisSpeeds.
      */
@@ -253,7 +300,7 @@ public class SwerveDrive extends SubsystemBase {
         double omegaRadPerSec = chassisSpeeds.omegaRadiansPerSecond;
         double thetaRad = Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond);
         double velMetersPerSec = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
-        
+       
         // made sure this functions as intended
         if (DriverStation.isAutonomous()) {
             skewCompensationThetaShift = Rotation2d.fromRadians(omegaRadPerSec * 0.0);
@@ -274,7 +321,7 @@ public class SwerveDrive extends SubsystemBase {
             module.applyCharacterizationVoltage(volts);
         }
     }
-    
+   
 
     public void setOmegaOverrideRadPerSec(Optional<Double> omegaOverrideRadPerSec){
         this.omegaOverrideRadPerSec = omegaOverrideRadPerSec;

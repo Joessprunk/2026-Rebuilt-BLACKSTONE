@@ -7,13 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "LeftOutOne"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopIntaking"
+            "pathName": "OtherRightOutOne"
           }
         },
         {
@@ -25,7 +19,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 5.0
+            "waitTime": 2.25
           }
         },
         {
@@ -35,15 +29,9 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "StartIntaking"
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "LeftOutTwo"
+            "pathName": "OtherRightOutOne"
           }
         }
       ]

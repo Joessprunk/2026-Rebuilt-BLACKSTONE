@@ -24,6 +24,8 @@ import frc.robot.commands.StopShooting;
 import frc.robot.commands.drive.AimToHubCmd;
 import frc.robot.commands.drive.AimToPassCmd;
 import frc.robot.commands.drive.ArcadeDriveCmd;
+import frc.robot.commands.drive.AutoAimDrive;
+import frc.robot.commands.drive.AutoPassDrive;
 import frc.robot.commands.drive.LockCmd;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
 import frc.robot.commands.indexer.SetTowerRollerRPM;
@@ -153,8 +155,42 @@ public class RobotContainer {
 			swerveDrive,
 			poseEstimator));
 
+		if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+			driverController.y().whileTrue(
+   		 new AutoAimDrive(
+      		  swerveDrive,
+       		 poseEstimator,
+       		 () -> driverController.getLeftY(),
+        	 () -> driverController.getLeftX())
+    	);
+		} else {
+			driverController.y().whileTrue(
+    	 new AutoAimDrive(
+        	swerveDrive,
+        	poseEstimator,
+        	() -> -driverController.getLeftY(),
+        	() -> -driverController.getLeftX())
+    	);
+		}
 		
-
+if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+			driverController.a().whileTrue(
+    new AutoPassDrive(
+        swerveDrive,
+        poseEstimator,
+        () -> driverController.getLeftY(),
+        () -> driverController.getLeftX())
+    );
+		} else {
+			driverController.a().whileTrue(
+    new AutoPassDrive(
+        swerveDrive,
+        poseEstimator,
+        () -> -driverController.getLeftY(),
+        () -> -driverController.getLeftX())
+    );
+		}
+		
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
     
 			driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
@@ -172,7 +208,7 @@ public class RobotContainer {
 			.onTrue(new StartPassing(turretSys, indexerSys /*swerveDrive, poseEstimator*/))
 			.onFalse(new StopPassing(turretSys, indexerSys, intakeSys));
 
-			driverController.a()
+			driverController.b()
 			.onTrue(new StartStealing(turretSys, indexerSys, intakeSys))
 			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
@@ -207,6 +243,10 @@ public class RobotContainer {
 		 operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
 		 operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
 		 operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+
+		 operatorController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
+			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
+			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
 
 		 
