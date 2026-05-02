@@ -210,10 +210,10 @@ public final class Constants {
         public static final double intakePivotMinAngle = -10.0;
         public static final double intakePivotMaxAngle = 170.0;
 
-        public static final double intakingPivotAngle = 137.0;
-        public static final double PivotBufferPositionAngle = 40.0;
+        public static final double intakingPivotAngle = 115.0;
+        public static final double PivotBufferPositionAngle = 60.0;//40.0;
 
-        public static final double intakePivotP = 0.03; // 0.01;
+        public static final double intakePivotP = 0.025; // 0.01;
         public static final double intakePivotD = 0.0; 
         public static final double intakePivotkS = 0.0;
         public static final double intakePivotkV = 0.0;

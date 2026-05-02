@@ -166,4 +166,7 @@ public class IntakeSys extends SubsystemBase {
   public double getRollerRPM() {
     return (leftRollerEnc.getVelocity()+rightRollerEnc.getVelocity()) / 2.0;
   }
+  public double getPivotCurrent(){
+    return intakePivotMtr.getOutputCurrent();
+  }
 }

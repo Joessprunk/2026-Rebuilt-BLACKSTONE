@@ -162,16 +162,16 @@ public class RobotContainer {
    		 new AutoAimDrive(
       		  swerveDrive,
        		 poseEstimator,
-       		 () -> driverController.getLeftY(),
-        	 () -> driverController.getLeftX())
+       		 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        	 () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
     	);
 		} else {
 			driverController.y().whileTrue(
     	 new AutoAimDrive(
         	swerveDrive,
         	poseEstimator,
-        	() -> -driverController.getLeftY(),
-        	() -> -driverController.getLeftX())
+        	() -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        	 () ->MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
     	);
 		}
 		
@@ -180,16 +180,16 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
     new AutoPassDrive(
         swerveDrive,
         poseEstimator,
-        () -> driverController.getLeftY(),
-        () -> driverController.getLeftX())
+        () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
     );
 		} else {
 			driverController.a().whileTrue(
     new AutoPassDrive(
         swerveDrive,
         poseEstimator,
-        () -> -driverController.getLeftY(),
-        () -> -driverController.getLeftX())
+        () -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
     );
 		}
 
@@ -367,6 +367,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		SmartDashboard.putNumber("flywheel offset RPM", turretSys.getFlywheelOffsetRPM());
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
 		SmartDashboard.putNumber("current hood angle", turretSys.getCurrentHoodAngleRad());
+		SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
 		// indexer info
 		SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
 		SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
@@ -375,6 +376,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// intake info
 		SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
 		SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
+		SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());
 
 		// climber info
 		

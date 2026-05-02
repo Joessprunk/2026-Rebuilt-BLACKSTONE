@@ -36,7 +36,7 @@ public class StartVomiting extends SequentialCommandGroup {
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerVomitingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerVomitingRPM),
         new WaitCommand(0.1), // 2.0 works idk why others dont...
-        new SetTargetPivotAngle(intakeSys, 10)
+        new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle)
 
         
         

@@ -365,6 +365,10 @@ public class TurretSys extends SubsystemBase {
     }
   }
 
+  public double getHoodMotorCurrent(){
+    return hoodMtr.getOutputCurrent();
+  }
+
   public Pose2d getBotPose() {
     return calculateBotPose();
   }
