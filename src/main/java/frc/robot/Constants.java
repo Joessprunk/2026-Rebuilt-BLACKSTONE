@@ -106,7 +106,7 @@ public final class Constants {
 
         // Change this value depending on your breakers and the current usage of
         // the rest of your robot.
-        public static final int driveMtrCurrentLimitAmps = 65;
+        public static final int driveMtrCurrentLimitAmps = 60;
         public static final int steerMtrCurrentLimitAmps = 30;
 
         // Change this number based on actual wheel diamter.
@@ -201,14 +201,14 @@ public final class Constants {
     }
 
     public class IntakeConstants {
-        public static final int maxRollerCurrentAmps = 60;
-        public static final int maxPivotCurrentAmps = 50;
+        public static final int maxRollerCurrentAmps = 55;
+        public static final int maxPivotCurrentAmps = 45;
 
         public static final double rollerPositionConversionFactor = 1.0;
         public static final double rollerVelocityConversionFactor = 1.0;
 
         public static final double intakePivotMinAngle = -10.0;
-        public static final double intakePivotMaxAngle = 150.0;
+        public static final double intakePivotMaxAngle = 170.0;
 
         public static final double intakingPivotAngle = 137.0;
         public static final double PivotBufferPositionAngle = 40.0;
@@ -263,8 +263,10 @@ public final class Constants {
         public static final Pose2d targetPoseBlue = new Pose2d(4.62, 4.04, null);
         public static final Pose2d targetPoseRed = new Pose2d(11.915, 4.035, null);
 
-        public static final Pose2d passingPoseBlue = new Pose2d(2.0, 7.0, null);
-        public static final Pose2d passingPoseRed = new Pose2d(14.0, 7.0, null);
+        public static final Pose2d passingPoseBlue = new Pose2d(1.75, 4.0, null);
+        public static final Pose2d passingPoseRed = new Pose2d(14.25, 4.0, null);
+        
+
 
         public static final double turretOffsetXInches = -1.5; // -5.75
         public static final double turretOffsetYInches = -5.75; // 1.5
@@ -293,9 +295,9 @@ public final class Constants {
 
     
     public class IndexerConstants {
-        public static final int maxTowerRollerCurrentAmps = 30;
-        public static final int maxLeftFloorRollerCurrentAmps = 30;//Make the same
-        public static final int maxRightFloorRollerCurrentAmps = 30;
+        public static final int maxTowerRollerCurrentAmps = 25;
+        public static final int maxLeftFloorRollerCurrentAmps = 25;//Make the same
+        public static final int maxRightFloorRollerCurrentAmps = 25;
 
         public static final double towerRollerP = 0.0002;
         public static final double towerRollerD = 0.004;

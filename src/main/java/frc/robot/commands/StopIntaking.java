@@ -13,7 +13,7 @@ import frc.robot.commands.intake.SetTargetPivotAngle;
 
 /** An example command that uses an example subsystem. */
 public class StopIntaking extends SequentialCommandGroup {
-  public StopIntaking(IntakeSys intakeSys, IndexerSys indexerSys) {
+  public StopIntaking(IntakeSys intakeSys) {
     super(
         new SetIntakeRollerRPM(intakeSys, 0)
         

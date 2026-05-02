@@ -29,8 +29,8 @@ public class StartManualShooting extends SequentialCommandGroup {
   public StartManualShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
         // new LockCmd(swerveSys),
-        new SetManualFlywheelRPM(turretSys, 2000),
-        new SetManualHoodAngle(turretSys, 0),
+        new SetManualFlywheelRPM(turretSys, 2020),
+        new SetManualHoodAngle(turretSys, 6.0),
         new WaitUntilCommand(() -> turretSys.isAtManualSpeed()),
         
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),

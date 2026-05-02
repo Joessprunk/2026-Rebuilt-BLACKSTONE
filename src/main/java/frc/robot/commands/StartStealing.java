@@ -30,9 +30,9 @@ public class StartStealing extends SequentialCommandGroup {
 
   public StartStealing(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/) {
     super(
-       new SetManualFlywheelRPM(turretSys, 2600),
+       new SetManualFlywheelRPM(turretSys, 4400),
         new SetManualHoodAngle(turretSys, 27.5),
-        new WaitCommand(1.0),
+        new WaitCommand(1.75),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),

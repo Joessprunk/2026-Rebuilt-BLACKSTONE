@@ -5,6 +5,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "StartIntaking"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "OtherRightOutOne"
@@ -19,7 +25,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 2.25
+            "waitTime": 2.7
           }
         },
         {
@@ -29,9 +35,33 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "StartIntaking"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "OtherRightOutOne"
+            "pathName": "OtherRightOutTwo"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StartShooting"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "StopShooting"
           }
         }
       ]

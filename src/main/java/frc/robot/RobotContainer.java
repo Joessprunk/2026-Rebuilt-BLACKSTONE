@@ -91,8 +91,8 @@ public class RobotContainer {
 	public RobotContainer() {
 
 		// register named commands
-		NamedCommands.registerCommand("StartIntaking", new StartIntaking(intakeSys, indexerSys));
-		NamedCommands.registerCommand("StopIntaking", new StopIntaking(intakeSys, indexerSys));
+		NamedCommands.registerCommand("StartIntaking", new StartIntaking(intakeSys));
+		NamedCommands.registerCommand("StopIntaking", new StopIntaking(intakeSys));
 		NamedCommands.registerCommand("StartShooting", new StartShootingAuto(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("StopShooting", new StopShooting(turretSys, indexerSys, intakeSys));
 		NamedCommands.registerCommand("ManualShoot", new StartManualShooting(turretSys, indexerSys, intakeSys));
@@ -130,9 +130,11 @@ public class RobotContainer {
 
 		// create competition autos
 		//new PathPlannerAuto("LoadingStation");
-		new PathPlannerAuto("Left");
-		new PathPlannerAuto("Right");
-		new PathPlannerAuto("OtherLeft");
+		// new PathPlannerAuto("Left");
+		new PathPlannerAuto("VershRight");
+		new PathPlannerAuto("VershLeft");
+		new PathPlannerAuto("TrenchVershLeft");
+		//new PathPlannerAuto("TrenchVershRight");
 		
 
 		// build auto chooser
@@ -190,15 +192,17 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
         () -> -driverController.getLeftX())
     );
 		}
+
+		driverController.x().onTrue(new LockCmd(swerveDrive));
 		
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
     
 			driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartIntaking(intakeSys, indexerSys))
-			.onFalse(new StopIntaking(intakeSys, indexerSys));
+			.onTrue(new StartIntaking(intakeSys))
+			.onFalse(new StopIntaking(intakeSys));
 
 			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartShooting(turretSys, indexerSys, intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
+			.onTrue(new StartShooting(turretSys, indexerSys,  intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
 			.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
 
 			driverController.rightBumper()
@@ -244,7 +248,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		 operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
 		 operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
 
-		 operatorController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
+		 operatorController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
 			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
 			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
