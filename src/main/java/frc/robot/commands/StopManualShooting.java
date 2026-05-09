@@ -27,7 +27,6 @@ public class StopManualShooting extends SequentialCommandGroup {
         new StopManualHoodAngle(turretSys),
         new SetFloorRollerRPM(indexerSys, 0.0),
         new SetTowerRollerRPM(indexerSys, 0.0),
-        new SetIntakeRollerRPM(intakeSys, 0.0)
-    );
+        new SetIntakeRollerRPM(intakeSys, 0.0));
   }
 }

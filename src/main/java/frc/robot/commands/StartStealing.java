@@ -28,16 +28,18 @@ import frc.robot.commands.intake.SetIntakeRollerRPM;
 /** An example command that uses an example subsystem. */
 public class StartStealing extends SequentialCommandGroup {
 
-  public StartStealing(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/) {
+  public StartStealing(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys /*
+                                                                                        * SwerveDrive swerveSys,
+                                                                                        * PoseEstimator poseEstimator
+                                                                                        */) {
     super(
-       new SetManualFlywheelRPM(turretSys, 4400),
+        new SetManualFlywheelRPM(turretSys, 4400),
         new SetManualHoodAngle(turretSys, 27.5),
         new WaitCommand(1.75),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
         new WaitCommand(1.0),
-        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
-    );
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle));
   }
 }

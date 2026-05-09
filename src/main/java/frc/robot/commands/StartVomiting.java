@@ -38,9 +38,6 @@ public class StartVomiting extends SequentialCommandGroup {
         new WaitCommand(0.1), // 2.0 works idk why others dont...
         new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle)
 
-        
-        
-
     );
   }
 }

@@ -16,8 +16,7 @@ import frc.robot.commands.intake.SetTargetPivotAngle;
 public class StartIntaking extends SequentialCommandGroup {
   public StartIntaking(IntakeSys intakeSys) {
     super(
-      new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle), 
-      new SetIntakeRollerRPM(intakeSys, Constants.IntakeConstants.RollerIntakingRPM) 
-    );
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new SetIntakeRollerRPM(intakeSys, Constants.IntakeConstants.RollerIntakingRPM));
   }
 }

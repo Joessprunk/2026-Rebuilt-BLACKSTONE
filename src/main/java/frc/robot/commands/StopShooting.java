@@ -21,11 +21,10 @@ public class StopShooting extends SequentialCommandGroup {
 
   public StopShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
-       // new StopAiming(turretSys), MAKE DRIVE CHASSIS BASED
+        // new StopAiming(turretSys), MAKE DRIVE CHASSIS BASED
         new StopFlywheelAndHood(turretSys),
         new SetFloorRollerRPM(indexerSys, 0.0),
         new SetTowerRollerRPM(indexerSys, 0.0),
-        new SetIntakeRollerRPM(intakeSys, 0.0)
-    );
+        new SetIntakeRollerRPM(intakeSys, 0.0));
   }
 }

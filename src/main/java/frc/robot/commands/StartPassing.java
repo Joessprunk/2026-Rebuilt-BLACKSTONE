@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.WaitUntilCommand;
@@ -28,17 +27,21 @@ import frc.robot.commands.intake.SetIntakeRollerRPM;
 /** An example command that uses an example subsystem. */
 public class StartPassing extends SequentialCommandGroup {
 
-  public StartPassing(TurretSys turretSys, IndexerSys indexerSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/) {
+  public StartPassing(TurretSys turretSys, IndexerSys indexerSys /*
+                                                                  * SwerveDrive swerveSys, PoseEstimator poseEstimator
+                                                                  */) {
     super(
-        //new AimToPassCmd(swerveSys, poseEstimator), // TODO: pass in pose estimator when we have it
+        // new AimToPassCmd(swerveSys, poseEstimator), // TODO: pass in pose estimator
+        // when we have it
         new ToggleIsPassingTrue(turretSys),
-        new StartFlywheelAndHood(turretSys), 
+        new StartFlywheelAndHood(turretSys),
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM)
-        
-        // new WaitCommand(1.0),
-        // new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
+
+    // new WaitCommand(1.0),
+    // new SetTargetPivotAngle(intakeSys,
+    // Constants.IntakeConstants.PivotBufferPositionAngle)
     );
   }
 }

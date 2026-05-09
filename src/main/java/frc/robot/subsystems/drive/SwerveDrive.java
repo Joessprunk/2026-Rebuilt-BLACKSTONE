@@ -45,8 +45,6 @@ public class SwerveDrive extends SubsystemBase {
 
     private Rotation2d skewCompensationThetaShift = new Rotation2d();
 
-   
-
     private final SwerveModule[] modules;
 
     private final Pigeon2 pigeon;
@@ -55,44 +53,41 @@ public class SwerveDrive extends SubsystemBase {
 
     private final SysIdRoutine sysIdRoutine;
 
-
     private Optional<Double> omegaOverrideRadPerSec = Optional.empty();
 
-    private final ProfiledPIDController thetaController =
-    new ProfiledPIDController(
-        4.0,  // kP (tune this)
-        0.0,
-        0.2,  
-        new TrapezoidProfile.Constraints(
-            360.0,  // max velocity (rad/s)
-            720.0  // max accel (rad/s^2)
-        )
+    private final ProfiledPIDController thetaController = new ProfiledPIDController(
+            4.0, // kP (tune this)
+            0.0,
+            0.2,
+            new TrapezoidProfile.Constraints(
+                    360.0, // max velocity (rad/s)
+                    720.0 // max accel (rad/s^2)
+            )
 
-       
     );
 
     public SwerveDrive() {
         modules = new SwerveModule[] {
-            new REVSwerveModule(
-                CANDevices.flModuleCANCoderID,
-                CANDevices.flModuleDriveMtrID,
-                CANDevices.flModuleSteerMtrID,
-                SwerveDriveConstants.flModuleOffset),
-            new REVSwerveModule(
-                CANDevices.frModuleCANCoderID,
-                CANDevices.frModuleDriveMtrID,
-                CANDevices.frModuleSteerMtrID,
-                SwerveDriveConstants.frModuleOffset),
-            new REVSwerveModule(
-                CANDevices.blModuleCANCoderID,
-                CANDevices.blModuleDriveMtrID,
-                CANDevices.blModuleSteerMtrID,
-                SwerveDriveConstants.blModuleOffset),
-            new REVSwerveModule(
-                CANDevices.brModuleCANCoderID,
-                CANDevices.brModuleDriveMtrID,
-                CANDevices.brModuleSteerMtrID,
-                SwerveDriveConstants.brModuleOffset)
+                new REVSwerveModule(
+                        CANDevices.flModuleCANCoderID,
+                        CANDevices.flModuleDriveMtrID,
+                        CANDevices.flModuleSteerMtrID,
+                        SwerveDriveConstants.flModuleOffset),
+                new REVSwerveModule(
+                        CANDevices.frModuleCANCoderID,
+                        CANDevices.frModuleDriveMtrID,
+                        CANDevices.frModuleSteerMtrID,
+                        SwerveDriveConstants.frModuleOffset),
+                new REVSwerveModule(
+                        CANDevices.blModuleCANCoderID,
+                        CANDevices.blModuleDriveMtrID,
+                        CANDevices.blModuleSteerMtrID,
+                        SwerveDriveConstants.blModuleOffset),
+                new REVSwerveModule(
+                        CANDevices.brModuleCANCoderID,
+                        CANDevices.brModuleDriveMtrID,
+                        CANDevices.brModuleSteerMtrID,
+                        SwerveDriveConstants.brModuleOffset)
         };
 
         pigeon = new Pigeon2(CANDevices.pigeonID);
@@ -104,38 +99,37 @@ public class SwerveDrive extends SubsystemBase {
         // Pigeon is mounted upside down
         pigeon.getConfigurator().apply(new MountPoseConfigs().withMountPoseRoll(180.0));
 
-        // start publishing an array of module states to NetworkTables with the "/SwerveStates" key
+        // start publishing an array of module states to NetworkTables with the
+        // "/SwerveStates" key
         publisher = NetworkTableInstance.getDefault()
-            .getStructArrayTopic("/SwerveStates", SwerveModuleState.struct).publish();
+                .getStructArrayTopic("/SwerveStates", SwerveModuleState.struct).publish();
 
         // initialzing sysID routines
         sysIdRoutine = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                null, // ramp rate
-                Volts.of(4), // step voltage (default 7)
-                Time.ofBaseUnits(3, Seconds) // timeout (default 10)
-            ),
-            new SysIdRoutine.Mechanism(
-                (voltage) -> {
-                    for (int i = 0; i < modules.length; i++) {
-                        double volts = voltage.in(Volts);
-                        modules[i].applyCharacterizationVoltage(volts);
-                    }
-                },
-                (log) -> {
-                    for (int i = 0; i < modules.length; i++) {
-                        Voltage voltage = Volts.of(modules[i].getCharacterizationVoltage());
-                        Distance distance = Meters.of(modules[i].getDriveDistanceMeters());
-                        LinearVelocity velocity = MetersPerSecond.of(modules[i].getDriveSpeedMetersPerSec());
-                        log.motor("drive-" + i)
-                            .voltage(voltage)
-                            .linearPosition(distance)
-                            .linearVelocity(velocity);
-                    }
-                },
-                this
-            )
-        );
+                new SysIdRoutine.Config(
+                        null, // ramp rate
+                        Volts.of(4), // step voltage (default 7)
+                        Time.ofBaseUnits(3, Seconds) // timeout (default 10)
+                ),
+                new SysIdRoutine.Mechanism(
+                        (voltage) -> {
+                            for (int i = 0; i < modules.length; i++) {
+                                double volts = voltage.in(Volts);
+                                modules[i].applyCharacterizationVoltage(volts);
+                            }
+                        },
+                        (log) -> {
+                            for (int i = 0; i < modules.length; i++) {
+                                Voltage voltage = Volts.of(modules[i].getCharacterizationVoltage());
+                                Distance distance = Meters.of(modules[i].getDriveDistanceMeters());
+                                LinearVelocity velocity = MetersPerSecond.of(modules[i].getDriveSpeedMetersPerSec());
+                                log.motor("drive-" + i)
+                                        .voltage(voltage)
+                                        .linearPosition(distance)
+                                        .linearVelocity(velocity);
+                            }
+                        },
+                        this));
     }
 
     // sysID command factories
@@ -157,37 +151,38 @@ public class SwerveDrive extends SubsystemBase {
 
     @Override
     public void periodic() {
-        // periodically updates the set of swerve module states published to NetworkTables
+        // periodically updates the set of swerve module states published to
+        // NetworkTables
         publisher.set(getModuleStates());
     }
 
     public double calculateAutoAimOmegaDeg(double currentDeg, double targetDeg) {
-    targetDeg = MathUtil.inputModulus(targetDeg, -180.0, 180.0);
+        targetDeg = MathUtil.inputModulus(targetDeg, -180.0, 180.0);
 
-    thetaController.setGoal(targetDeg);
+        thetaController.setGoal(targetDeg);
 
-    double outputDegPerSec = thetaController.calculate(currentDeg);
+        double outputDegPerSec = thetaController.calculate(currentDeg);
 
-    outputDegPerSec = MathUtil.clamp(outputDegPerSec, -360.0, 360.0);
+        outputDegPerSec = MathUtil.clamp(outputDegPerSec, -360.0, 360.0);
 
-    if (thetaController.atGoal()) {
-        return 0.0;
+        if (thetaController.atGoal()) {
+            return 0.0;
+        }
+
+        return outputDegPerSec;
     }
 
-    return outputDegPerSec;
-}
-public void resetAutoAim(double currentDeg) {
-    thetaController.reset(currentDeg);
-}
+    public void resetAutoAim(double currentDeg) {
+        thetaController.reset(currentDeg);
+    }
 
-public void enableAutoAimDeg(double omegaDegPerSec) {
-    setOmegaOverrideRadPerSec(Optional.of(Math.toRadians(omegaDegPerSec)));
-}
+    public void enableAutoAimDeg(double omegaDegPerSec) {
+        setOmegaOverrideRadPerSec(Optional.of(Math.toRadians(omegaDegPerSec)));
+    }
 
-public void disableAutoAim() {
-    setOmegaOverrideRadPerSec(Optional.empty());
-}
-   
+    public void disableAutoAim() {
+        setOmegaOverrideRadPerSec(Optional.empty());
+    }
 
     public Rotation2d getHeading() {
         // reading is negated so that CCW is positive
@@ -204,31 +199,31 @@ public void disableAutoAim() {
 
     public SwerveModulePosition[] getModulePositions() {
         SwerveModulePosition[] positions = new SwerveModulePosition[4];
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             // undo skew compensation for correct pose estimation
             SwerveModulePosition positionSkewed = modules[i].getModulePosition();
             positions[i] = new SwerveModulePosition(
-                positionSkewed.distanceMeters,
-                positionSkewed.angle.plus(skewCompensationThetaShift));
+                    positionSkewed.distanceMeters,
+                    positionSkewed.angle.plus(skewCompensationThetaShift));
         }
         return positions;
     }
 
     public SwerveModuleState[] getModuleStates() {
         SwerveModuleState[] states = new SwerveModuleState[4];
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             // undo skew compensation for correct pose estimation
             SwerveModuleState stateSkewed = modules[i].getModuleState();
             states[i] = new SwerveModuleState(
-                stateSkewed.speedMetersPerSecond,
-                stateSkewed.angle.plus(skewCompensationThetaShift));
+                    stateSkewed.speedMetersPerSecond,
+                    stateSkewed.angle.plus(skewCompensationThetaShift));
         }
         return states;
     }
 
     public Rotation2d[] getCanCoderAngles() {
         Rotation2d[] canCoderAngles = new Rotation2d[4];
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             canCoderAngles[i] = modules[i].getCanCoderAngle();
         }
         return canCoderAngles;
@@ -241,37 +236,42 @@ public void disableAutoAim() {
     public ChassisSpeeds getFieldRelativeSpeeds(Rotation2d robotHeading) {
         return ChassisSpeeds.fromRobotRelativeSpeeds(getRobotRelativeSpeeds(), robotHeading);
     }
+
     public double getRobotVelocity() {
-        return Math.hypot(SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vxMetersPerSecond, SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vyMetersPerSecond);
+        return Math.hypot(SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vxMetersPerSecond,
+                SwerveDriveConstants.kinematics.toChassisSpeeds(getModuleStates()).vyMetersPerSecond);
     }
 
-    public void driveFieldRelative(double xMetersPerSec, double yMetersPerSec, double omegaRadPerSec, Rotation2d heading) {
-        if(omegaOverrideRadPerSec.isPresent()) {
+    public void driveFieldRelative(double xMetersPerSec, double yMetersPerSec, double omegaRadPerSec,
+            Rotation2d heading) {
+        if (omegaOverrideRadPerSec.isPresent()) {
             omegaRadPerSec = omegaOverrideRadPerSec.get();
         }
 
         SmartDashboard.putBoolean("Recieved Heading Override", omegaOverrideRadPerSec.isPresent());
-        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSec, yMetersPerSec, omegaRadPerSec, heading);
+        ChassisSpeeds chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(xMetersPerSec, yMetersPerSec,
+                omegaRadPerSec, heading);
         driveRobotRelative(chassisSpeeds);
     }
 
     public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
-       
+
         chassisSpeeds = ChassisSpeeds.discretize(chassisSpeeds, 0.02);
 
         // only lock wheels if all inputs are zero
-        if(chassisSpeeds.vxMetersPerSecond != 0.0 || chassisSpeeds.vyMetersPerSecond != 0.0 || chassisSpeeds.omegaRadiansPerSecond != 0.0) {
+        if (chassisSpeeds.vxMetersPerSecond != 0.0 || chassisSpeeds.vyMetersPerSecond != 0.0
+                || chassisSpeeds.omegaRadiansPerSecond != 0.0) {
             isLocked = false;
         }
-       
+
         SwerveModuleState[] desiredModuleStates;
 
-        if(isLocked) {
+        if (isLocked) {
             desiredModuleStates = new SwerveModuleState[] {
-                new SwerveModuleState(0.00, new Rotation2d(0.25 * Math.PI)),
-                new SwerveModuleState(0.00, new Rotation2d(-0.25 * Math.PI)),
-                new SwerveModuleState(0.00, new Rotation2d(-0.25 * Math.PI)),
-                new SwerveModuleState(0.00, new Rotation2d(0.25 * Math.PI))
+                    new SwerveModuleState(0.00, new Rotation2d(0.25 * Math.PI)),
+                    new SwerveModuleState(0.00, new Rotation2d(-0.25 * Math.PI)),
+                    new SwerveModuleState(0.00, new Rotation2d(-0.25 * Math.PI)),
+                    new SwerveModuleState(0.00, new Rotation2d(0.25 * Math.PI))
             };
         } else {
             chassisSpeeds = compensateForSkew(chassisSpeeds);
@@ -279,22 +279,25 @@ public void disableAutoAim() {
             desiredModuleStates = SwerveDriveConstants.kinematics.toSwerveModuleStates(chassisSpeeds);
 
             SwerveDriveKinematics.desaturateWheelSpeeds(
-                desiredModuleStates,
-                chassisSpeeds,
-                SwerveModuleConstants.driveFreeSpeedMetersPerSec,
-                SwerveDriveConstants.maxAttainableSpeedMetersPerSec,
-                SwerveDriveConstants.maxAttainableRotationRadPerSec);
+                    desiredModuleStates,
+                    chassisSpeeds,
+                    SwerveModuleConstants.driveFreeSpeedMetersPerSec,
+                    SwerveDriveConstants.maxAttainableSpeedMetersPerSec,
+                    SwerveDriveConstants.maxAttainableRotationRadPerSec);
         }
 
-        for(int i = 0; i < 4; i++) {
+        for (int i = 0; i < 4; i++) {
             modules[i].setState(desiredModuleStates[i]);
         }
     }
 
     /**
-     * Counters the skew in lateral motion caused by rotation of the chassis by shifting the direction of
-     * the lateral motion by a factor of the angular velocity opposite the skew. The shift is stored as a
-     * local variable and should be used to unshift the module angles when applying them to odometry.
+     * Counters the skew in lateral motion caused by rotation of the chassis by
+     * shifting the direction of
+     * the lateral motion by a factor of the angular velocity opposite the skew. The
+     * shift is stored as a
+     * local variable and should be used to unshift the module angles when applying
+     * them to odometry.
      *
      * @param chassisSpeeds The ChassisSpeeds to modify.
      * @return The skew-compensated ChassisSpeeds.
@@ -303,16 +306,17 @@ public void disableAutoAim() {
         double omegaRadPerSec = chassisSpeeds.omegaRadiansPerSecond;
         double thetaRad = Math.atan2(chassisSpeeds.vyMetersPerSecond, chassisSpeeds.vxMetersPerSecond);
         double velMetersPerSec = Math.hypot(chassisSpeeds.vxMetersPerSecond, chassisSpeeds.vyMetersPerSecond);
-       
+
         // made sure this functions as intended
         if (DriverStation.isAutonomous()) {
             skewCompensationThetaShift = Rotation2d.fromRadians(omegaRadPerSec * 0.0);
         } else {
-            skewCompensationThetaShift = Rotation2d.fromRadians(omegaRadPerSec * SwerveDriveConstants.skewCompensationRatioOmegaPerTheta);
+            skewCompensationThetaShift = Rotation2d
+                    .fromRadians(omegaRadPerSec * SwerveDriveConstants.skewCompensationRatioOmegaPerTheta);
         }
 
         thetaRad -= skewCompensationThetaShift.getRadians();
-            return new ChassisSpeeds(
+        return new ChassisSpeeds(
                 velMetersPerSec * Math.cos(thetaRad),
                 velMetersPerSec * Math.sin(thetaRad),
                 omegaRadPerSec);
@@ -320,13 +324,12 @@ public void disableAutoAim() {
 
     // for sysID use only
     public void applyCharacterizationVoltage(double volts) {
-        for(SwerveModule module : modules) {
+        for (SwerveModule module : modules) {
             module.applyCharacterizationVoltage(volts);
         }
     }
-   
 
-    public void setOmegaOverrideRadPerSec(Optional<Double> omegaOverrideRadPerSec){
+    public void setOmegaOverrideRadPerSec(Optional<Double> omegaOverrideRadPerSec) {
         this.omegaOverrideRadPerSec = omegaOverrideRadPerSec;
     }
 

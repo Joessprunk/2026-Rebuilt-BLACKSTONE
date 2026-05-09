@@ -16,7 +16,7 @@ public class StopIntaking extends SequentialCommandGroup {
   public StopIntaking(IntakeSys intakeSys) {
     super(
         new SetIntakeRollerRPM(intakeSys, 0)
-        
+
     );
   }
 }

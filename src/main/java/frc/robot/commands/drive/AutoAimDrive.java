@@ -25,11 +25,10 @@ public class AutoAimDrive extends Command {
     private boolean isRed;
 
     public AutoAimDrive(
-        SwerveDrive swerveSys,
-        PoseEstimator poseEstimator,
-        Supplier<Double> xSupplier,
-        Supplier<Double> ySupplier
-    ) {
+            SwerveDrive swerveSys,
+            PoseEstimator poseEstimator,
+            Supplier<Double> xSupplier,
+            Supplier<Double> ySupplier) {
         this.swerveSys = swerveSys;
         this.poseEstimator = poseEstimator;
         this.xSupplier = xSupplier;
@@ -41,13 +40,11 @@ public class AutoAimDrive extends Command {
     @Override
     public void initialize() {
         isRed = DriverStation.getAlliance()
-            .map(a -> a == DriverStation.Alliance.Red)
-            .orElse(false);
+                .map(a -> a == DriverStation.Alliance.Red)
+                .orElse(false);
 
-       
         swerveSys.resetAutoAim(
-            poseEstimator.getPose().getRotation().getDegrees()
-        );
+                poseEstimator.getPose().getRotation().getDegrees());
     }
 
     @Override
@@ -59,28 +56,25 @@ public class AutoAimDrive extends Command {
 
         double targetDeg;
 
-       
         if (isRed) {
             targetDeg = TurretConstants.targetPoseRed.getTranslation()
-                .minus(pose.getTranslation())
-                .getAngle().getDegrees() + 180.0;
+                    .minus(pose.getTranslation())
+                    .getAngle().getDegrees() + 180.0;
         } else {
             targetDeg = TurretConstants.targetPoseBlue.getTranslation()
-                .minus(pose.getTranslation())
-                .getAngle().getDegrees() + 180.0;
+                    .minus(pose.getTranslation())
+                    .getAngle().getDegrees() + 180.0;
         }
 
         double omegaDeg = swerveSys.calculateAutoAimOmegaDeg(currentDeg, targetDeg);
 
         swerveSys.enableAutoAimDeg(omegaDeg);
 
-       
         swerveSys.driveFieldRelative(
-            xSupplier.get(),
-            ySupplier.get(),
-            0.0, // ignored because of override
-            pose.getRotation()
-        );
+                xSupplier.get(),
+                ySupplier.get(),
+                0.0, // ignored because of override
+                pose.getRotation());
     }
 
     @Override

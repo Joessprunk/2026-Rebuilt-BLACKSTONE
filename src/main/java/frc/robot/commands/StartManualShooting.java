@@ -32,13 +32,12 @@ public class StartManualShooting extends SequentialCommandGroup {
         new SetManualFlywheelRPM(turretSys, 2020),
         new SetManualHoodAngle(turretSys, 6.0),
         new WaitUntilCommand(() -> turretSys.isAtManualSpeed()),
-        
+
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
         new WaitCommand(1.5), // 2.0 works idk why others dont...
         new SetTargetPivotAngle(intakeSys, 10)
-        
 
     );
   }

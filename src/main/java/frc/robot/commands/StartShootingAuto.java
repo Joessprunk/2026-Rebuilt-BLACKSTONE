@@ -27,13 +27,12 @@ public class StartShootingAuto extends SequentialCommandGroup {
 
   public StartShootingAuto(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
-         new StartFlywheelAndHood(turretSys), 
+        new StartFlywheelAndHood(turretSys),
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        //new WaitCommand(1.0),
-        new SetTargetPivotAngle(intakeSys, 20.0)
-    );
+        // new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, 20.0));
   }
 }

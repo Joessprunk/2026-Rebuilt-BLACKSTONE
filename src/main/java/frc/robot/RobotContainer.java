@@ -4,7 +4,6 @@
 
 package frc.robot;
 
-
 import frc.robot.Constants.ControllerConstants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
@@ -123,19 +122,17 @@ public class RobotContainer {
 				swerveDrive);
 
 		// create test autos
-		//new PathPlannerAuto("SquigglePathTest");
-		//new PathPlannerAuto("TranslationTest");
-		//new PathPlannerAuto("TurningWhileMovingTest");
-		
+		// new PathPlannerAuto("SquigglePathTest");
+		// new PathPlannerAuto("TranslationTest");
+		// new PathPlannerAuto("TurningWhileMovingTest");
 
 		// create competition autos
-		//new PathPlannerAuto("LoadingStation");
+		// new PathPlannerAuto("LoadingStation");
 		// new PathPlannerAuto("Left");
 		new PathPlannerAuto("VershRight");
 		new PathPlannerAuto("VershLeft");
 		new PathPlannerAuto("TrenchVershLeft");
-		//new PathPlannerAuto("TrenchVershRight");
-		
+		// new PathPlannerAuto("TrenchVershRight");
 
 		// build auto chooser
 		autoChooser = AutoBuilder.buildAutoChooser("Do Nothing");
@@ -150,119 +147,119 @@ public class RobotContainer {
 	private void configureBindings() {
 		// driver controls for competition
 		swerveDrive.setDefaultCommand(new ArcadeDriveCmd(
-			() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
-			() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband),
-			() -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.joystickDeadband),
-			true,
-			swerveDrive,
-			poseEstimator));
+				() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+				() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband),
+				() -> MathUtil.applyDeadband(driverController.getRightX(), ControllerConstants.joystickDeadband),
+				true,
+				swerveDrive,
+				poseEstimator));
 
-		if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
 			driverController.y().whileTrue(
-   		 new AutoAimDrive(
-      		  swerveDrive,
-       		 poseEstimator,
-       		 () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        	 () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    	);
+					new AutoAimDrive(
+							swerveDrive,
+							poseEstimator,
+							() -> MathUtil.applyDeadband(driverController.getLeftY(),
+									ControllerConstants.joystickDeadband),
+							() -> MathUtil.applyDeadband(driverController.getLeftX(),
+									ControllerConstants.joystickDeadband)));
 		} else {
 			driverController.y().whileTrue(
-    	 new AutoAimDrive(
-        	swerveDrive,
-        	poseEstimator,
-        	() -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        	 () ->MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    	);
+					new AutoAimDrive(
+							swerveDrive,
+							poseEstimator,
+							() -> MathUtil.applyDeadband(-driverController.getLeftY(),
+									ControllerConstants.joystickDeadband),
+							() -> MathUtil.applyDeadband(-driverController.getLeftX(),
+									ControllerConstants.joystickDeadband)));
 		}
-		
-if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
+
+		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
 			driverController.a().whileTrue(
-    new AutoPassDrive(
-        swerveDrive,
-        poseEstimator,
-        () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    );
+					new AutoPassDrive(
+							swerveDrive,
+							poseEstimator,
+							() -> MathUtil.applyDeadband(driverController.getLeftY(),
+									ControllerConstants.joystickDeadband),
+							() -> MathUtil.applyDeadband(driverController.getLeftX(),
+									ControllerConstants.joystickDeadband)));
 		} else {
 			driverController.a().whileTrue(
-    new AutoPassDrive(
-        swerveDrive,
-        poseEstimator,
-        () -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    );
+					new AutoPassDrive(
+							swerveDrive,
+							poseEstimator,
+							() -> MathUtil.applyDeadband(-driverController.getLeftY(),
+									ControllerConstants.joystickDeadband),
+							() -> MathUtil.applyDeadband(-driverController.getLeftX(),
+									ControllerConstants.joystickDeadband)));
 		}
 
 		driverController.x().onTrue(new LockCmd(swerveDrive));
-		
+
 		driverController.start().onTrue(Commands.runOnce(() -> poseEstimator.resetHeading(), poseEstimator));
-    
-			driverController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartIntaking(intakeSys))
-			.onFalse(new StopIntaking(intakeSys));
 
-			driverController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartShooting(turretSys, indexerSys,  intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
-			.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
+		driverController
+				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
+				.onTrue(new StartIntaking(intakeSys))
+				.onFalse(new StopIntaking(intakeSys));
 
-			driverController.rightBumper()
-			.onTrue(new StartVomiting(turretSys, indexerSys, intakeSys))
-			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
-			driverController.leftBumper()
-			.onTrue(new StartPassing(turretSys, indexerSys /*swerveDrive, poseEstimator*/))
-			.onFalse(new StopPassing(turretSys, indexerSys, intakeSys));
+		driverController
+				.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
+				.onTrue(new StartShooting(turretSys, indexerSys, intakeSys /*
+																			 * SwerveDrive swerveSys, PoseEstimator
+																			 * poseEstimator
+																			 */))
+				.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
 
-			driverController.b()
-			.onTrue(new StartStealing(turretSys, indexerSys, intakeSys))
-			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+		driverController.rightBumper()
+				.onTrue(new StartVomiting(turretSys, indexerSys, intakeSys))
+				.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+		driverController.leftBumper()
+				.onTrue(new StartPassing(turretSys, indexerSys /* swerveDrive, poseEstimator */))
+				.onFalse(new StopPassing(turretSys, indexerSys, intakeSys));
 
-			// driverController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
-			// driverController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+		driverController.b()
+				.onTrue(new StartStealing(turretSys, indexerSys, intakeSys))
+				.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
-			// driverController.x().onTrue(new AimToHubCmd(swerveDrive, poseEstimator));
-			// driverController.y().onTrue(new AimToPassCmd(swerveDrive, poseEstimator));
+		// driverController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+		// driverController.a().onTrue(new SetTargetPivotAngle(intakeSys,
+		// IntakeConstants.intakingPivotAngle));
 
+		// driverController.x().onTrue(new AimToHubCmd(swerveDrive, poseEstimator));
+		// driverController.y().onTrue(new AimToPassCmd(swerveDrive, poseEstimator));
 
-			// for tuning
-			// driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
-			// driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
-			// driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
-			// driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
-
-			
-			
-
-		
-
-
+		// for tuning
+		// driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+		// driverController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+		// driverController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+		// driverController.povRight().onTrue(new IncrementHoodOffset(turretSys));
 
 		// // operator bindings for competition
-		 operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
-		 operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
-		  operatorController.povRight().onTrue(new IncrementHoodOffset(turretSys));
-		 operatorController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
+		operatorController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
+		operatorController.povDown().onTrue(new DecrementFlywheelOffset(turretSys));
+		operatorController.povRight().onTrue(new IncrementHoodOffset(turretSys));
+		operatorController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
 
-		 operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
+		operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
 
-		 operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
-		 operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
-		 operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+		operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+		operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+		operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
 
-		 operatorController.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
-			.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys /*SwerveDrive swerveSys, PoseEstimator poseEstimator*/))
-			.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
+		operatorController
+				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
+				.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys /*
+																					 * SwerveDrive swerveSys,
+																					 * PoseEstimator poseEstimator
+																					 */))
+				.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
+		// operatorController.y().onTrue(new ToggleIsPassing(turretSys));
 
-		 
-
-		 //operatorController.y().onTrue(new ToggleIsPassing(turretSys));
-		
 		// operatorController.start().onTrue(new ToggleIsPassing(turretSys));
-		
 
 		// operatorController
-
-	
 
 		// // binding commands for swerve sysID
 		// // driverController.a().onTrue(swerveDrive.driveSysIdDynamicForward());
@@ -275,8 +272,6 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// // driverController.b().onTrue(turretSys.sysIdDynamicReverse());
 		// // driverController.x().onTrue(turretSys.sysIdQuasistaticForward());
 		// // driverController.y().onTrue(turretSys.sysIdQuasistaticReverse());
-
-		
 
 		// flywheel RPM control bindings for testing
 		// operatorController.x().onTrue(new SetManualFlywheelRPM(turretSys, 0.0));
@@ -297,7 +292,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// operatorController.y().onTrue(new SetTowerRollerRPM(indexerSys, 1000.0));
 
 		// Indexer floor roller RPM control bindings for testing
-        // operatorController.a().onTrue(new SetFloorRollerRPM(indexerSys, 750.0));
+		// operatorController.a().onTrue(new SetFloorRollerRPM(indexerSys, 750.0));
 		// operatorController.b().onTrue(new SetFloorRollerRPM(indexerSys, 500.0));
 		// operatorController.x().onTrue(new SetFloorRollerRPM(indexerSys, 0.0));
 		// operatorController.y().onTrue(new SetFloorRollerRPM(indexerSys, 1000.0));
@@ -316,7 +311,6 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,120.0));
 		// operatorController.start().onTrue(new ResetPivotAngle(intakeSys));
 
-		
 	}
 
 	public Command getAutonomousCommand() {
@@ -348,14 +342,14 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// turret azimuth info
 		// SmartDashboard.putNumber("manual azimuth angle rads",
 		// turretSys.getAzimuthManualTargetDeg());
-		
-		//SmartDashboard.putNumber("target azimuth angle rad", turretSys.calculateTargetAzimuthAngleShooting());
+
+		// SmartDashboard.putNumber("target azimuth angle rad",
+		// turretSys.calculateTargetAzimuthAngleShooting());
 		// SmartDashboard.putNumberArray("turret pose", new double[] {
-		// 		turretSys.getTurretPose().getTranslation().getX(),
-		// 		turretSys.getTurretPose().getTranslation().getY() });
+		// turretSys.getTurretPose().getTranslation().getX(),
+		// turretSys.getTurretPose().getTranslation().getY() });
 		SmartDashboard.putBoolean("is Aiming", turretSys.getIsAiming());
 		SmartDashboard.putBoolean("is Passing", turretSys.getIsPassing());
-		
 
 		// turret flywheel
 		SmartDashboard.putNumber("flywheel current RPM", turretSys.getFlywheelRPM());
@@ -379,7 +373,6 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());
 
 		// climber info
-		
 
 		// field
 		SmartDashboard.putData("robot field", poseEstimator.getField());
