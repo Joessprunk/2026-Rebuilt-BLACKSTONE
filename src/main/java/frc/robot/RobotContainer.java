@@ -27,6 +27,7 @@ import frc.robot.commands.intake.SetTargetPivotAngle;
 import frc.robot.commands.turret.DecrementHoodOffset;
 import frc.robot.commands.turret.DecrementFlywheelOffset;
 import frc.robot.commands.turret.IncrementHoodOffset;
+import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.IncrementFlywheelOffset;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
@@ -235,9 +236,9 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 
 		operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
 
-		operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
-		operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
-		operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
+		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
 
 		operatorController
 				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
@@ -272,10 +273,10 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		// operatorController.y().onTrue(new SetManualFlywheelRPM(turretSys, 3000.0));
 
 		// hood angle control bindings for testing
-		// operatorController.x().onTrue(new SetManualHoodAngle(turretSys, 0.0));
-		// operatorController.b().onTrue(new SetManualHoodAngle(turretSys, 20.0));
-		// operatorController.a().onTrue(new SetManualHoodAngle(turretSys, 10.0));
-		// operatorController.y().onTrue(new SetManualHoodAngle(turretSys, 30.0));
+		operatorController.x().onTrue(new SetManualHoodAngle(turretSys, 0.0));
+		operatorController.b().onTrue(new SetManualHoodAngle(turretSys, 20.0));
+		operatorController.a().onTrue(new SetManualHoodAngle(turretSys, 10.0));
+		operatorController.y().onTrue(new SetManualHoodAngle(turretSys, 30.0));
 
 		// Indexer RPM control bindings for testing
 		// operatorController.a().onTrue(new SetTowerRollerRPM(indexerSys, 100.0));

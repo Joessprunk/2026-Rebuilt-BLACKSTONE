@@ -37,7 +37,7 @@ public class TurretSys extends SubsystemBase {
   private final SparkClosedLoopController hoodPID;
   private final PoseEstimator poseEstimator;
 
-  private Double manualHoodAngle = null;
+  private Double manualHoodAngle = 0.0;
   private Double manualFlywheelRPM = 0.0;
   private boolean isAiming = false;
   private boolean isFiring = false;
@@ -173,7 +173,7 @@ public class TurretSys extends SubsystemBase {
     } else {
       leftFlyWheelMtr.stopMotor();
       rightFlyWheelMtr.stopMotor();
-      setHoodAngle(0.0);
+      setHoodAngle(manualHoodAngle);//CHANGEBACKTO...0.0
     }
   }
 

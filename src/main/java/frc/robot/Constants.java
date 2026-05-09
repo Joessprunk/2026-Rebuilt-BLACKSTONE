@@ -210,8 +210,8 @@ public final class Constants {
         public static final double intakePivotMinAngle = -10.0;
         public static final double intakePivotMaxAngle = 170.0;
 
-        public static final double intakingPivotAngle = 115.0;
-        public static final double PivotBufferPositionAngle = 60.0;//40.0;
+        public static final double intakingPivotAngle = 130.0;
+        public static final double PivotBufferPositionAngle = 67.0;//40.0;
 
         public static final double intakePivotP = 0.025; // 0.01;
         public static final double intakePivotD = 0.0; 
@@ -281,10 +281,10 @@ public final class Constants {
         public static final int maxHoodCurrentAmps = 20;
         public static final double maximumHoodAngleDeg = 40.0;
         public static final double minimumHoodAngleDeg = -4.0;
-        public static final double hoodkP= 1.015;
+        public static final double hoodkP= 2.0;//1.015;
         public static final double hoodkD = 0.3;
-        public static final double hoodkS = 0.2;
-        public static final double hoodkG = 0.01;
+        public static final double hoodkS = 0.0;//0.2;
+        public static final double hoodkG = 0.0;//0.01;
         public static final double hoodDefaultSetpointAngleDeg = 0.0;
 
 
