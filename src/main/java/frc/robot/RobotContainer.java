@@ -5,10 +5,8 @@
 package frc.robot;
 
 import frc.robot.Constants.ControllerConstants;
-import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.Constants.SwerveDriveConstants;
-import frc.robot.Constants.TurretConstants;
 import frc.robot.commands.StartIntaking;
 import frc.robot.commands.StartManualShooting;
 import frc.robot.commands.StartPassing;
@@ -20,24 +18,16 @@ import frc.robot.commands.StopIntaking;
 import frc.robot.commands.StopManualShooting;
 import frc.robot.commands.StopPassing;
 import frc.robot.commands.StopShooting;
-import frc.robot.commands.drive.AimToHubCmd;
-import frc.robot.commands.drive.AimToPassCmd;
 import frc.robot.commands.drive.ArcadeDriveCmd;
 import frc.robot.commands.drive.AutoAimDrive;
 import frc.robot.commands.drive.AutoPassDrive;
 import frc.robot.commands.drive.LockCmd;
-import frc.robot.commands.indexer.SetFloorRollerRPM;
-import frc.robot.commands.indexer.SetTowerRollerRPM;
 import frc.robot.commands.intake.ResetPivotAngle;
 import frc.robot.commands.intake.SetTargetPivotAngle;
-import frc.robot.commands.intake.SetIntakeRollerRPM;
 import frc.robot.commands.turret.DecrementHoodOffset;
 import frc.robot.commands.turret.DecrementFlywheelOffset;
 import frc.robot.commands.turret.IncrementHoodOffset;
 import frc.robot.commands.turret.IncrementFlywheelOffset;
-import frc.robot.commands.turret.SetManualFlywheelRPM;
-import frc.robot.commands.turret.SetManualHoodAngle;
-import frc.robot.commands.turret.StopManualFlywheelRPM;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
@@ -52,7 +42,6 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -156,42 +145,45 @@ public class RobotContainer {
 
 		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
 			driverController.y().whileTrue(
-					new AutoAimDrive(
-							swerveDrive,
-							poseEstimator,
-							() -> MathUtil.applyDeadband(driverController.getLeftY(),
-									ControllerConstants.joystickDeadband),
-							() -> MathUtil.applyDeadband(driverController.getLeftX(),
-									ControllerConstants.joystickDeadband)));
+   				 new AutoAimDrive(
+      		 		swerveDrive,
+       				poseEstimator,
+       				() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        	 		() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
+    	);
+		driverController.a().whileTrue(
+   			new AutoPassDrive(
+        		swerveDrive,
+        		poseEstimator,
+        		() -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        		() -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
+   		);
 		} else {
 			driverController.y().whileTrue(
-					new AutoAimDrive(
-							swerveDrive,
-							poseEstimator,
-							() -> MathUtil.applyDeadband(-driverController.getLeftY(),
-									ControllerConstants.joystickDeadband),
-							() -> MathUtil.applyDeadband(-driverController.getLeftX(),
-									ControllerConstants.joystickDeadband)));
+    	 new AutoAimDrive(
+        	swerveDrive,
+        	poseEstimator,
+        	() -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        	 () ->MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
+    	);
 		}
-
-		if (DriverStation.getAlliance().get() == DriverStation.Alliance.Red) {
+		
+if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 			driverController.a().whileTrue(
-					new AutoPassDrive(
-							swerveDrive,
-							poseEstimator,
-							() -> MathUtil.applyDeadband(driverController.getLeftY(),
-									ControllerConstants.joystickDeadband),
-							() -> MathUtil.applyDeadband(driverController.getLeftX(),
-									ControllerConstants.joystickDeadband)));
+    new AutoPassDrive(
+        swerveDrive,
+        poseEstimator,
+        () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
+    );
 		} else {
 			driverController.a().whileTrue(
-					new AutoPassDrive(
-							swerveDrive,
-							poseEstimator,
-							() -> MathUtil.applyDeadband(-driverController.getLeftY(),
-									ControllerConstants.joystickDeadband),
-							() -> MathUtil.applyDeadband(-driverController.getLeftX(),
-									ControllerConstants.joystickDeadband)));
+    new AutoPassDrive(
+        swerveDrive,
+        poseEstimator,
+        () -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
+    );
 		}
 
 		driverController.x().onTrue(new LockCmd(swerveDrive));
