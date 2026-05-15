@@ -134,7 +134,8 @@ public class IntakeSys extends SubsystemBase {
 
   public void periodic() {
      if(DriverStation.isDisabled()){
-      intakePivotPID.setGoal(getPivotAngle());
+      //intakePivotPID.setGoal(getPivotAngle());
+      intakePivotPID.reset(getPivotAngle());
      }else{
      intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
      }

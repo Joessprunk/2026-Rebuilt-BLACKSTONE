@@ -167,24 +167,13 @@ public class RobotContainer {
         	() -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
         	 () ->MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
     	);
-		}
-		
-if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
-			driverController.a().whileTrue(
-    new AutoPassDrive(
-        swerveDrive,
-        poseEstimator,
-        () -> MathUtil.applyDeadband(driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    );
-		} else {
-			driverController.a().whileTrue(
-    new AutoPassDrive(
-        swerveDrive,
-        poseEstimator,
-        () -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
-        () -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
-    );
+		driverController.a().whileTrue(
+   			new AutoPassDrive(
+        		swerveDrive,
+        		poseEstimator,
+        		() -> MathUtil.applyDeadband(-driverController.getLeftY(), ControllerConstants.joystickDeadband),
+        		() -> MathUtil.applyDeadband(-driverController.getLeftX(), ControllerConstants.joystickDeadband))
+   		);
 		}
 
 		driverController.x().onTrue(new LockCmd(swerveDrive));
@@ -198,10 +187,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 
 		driverController
 				.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
-				.onTrue(new StartShooting(turretSys, indexerSys, intakeSys /*
-																			 * SwerveDrive swerveSys, PoseEstimator
-																			 * poseEstimator
-																			 */))
+				.onTrue(new StartShooting(turretSys, indexerSys, intakeSys))
 				.onFalse(new StopShooting(turretSys, indexerSys, intakeSys));
 
 		driverController.rightBumper()
@@ -242,10 +228,7 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 
 		operatorController
 				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
-				.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys /*
-																					 * SwerveDrive swerveSys,
-																					 * PoseEstimator poseEstimator
-																					 */))
+				.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys))
 				.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
 
 		// operatorController.y().onTrue(new ToggleIsPassing(turretSys));
@@ -354,16 +337,17 @@ if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red){
 		SmartDashboard.putNumber("flywheel offset RPM", turretSys.getFlywheelOffsetRPM());
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
 		SmartDashboard.putNumber("current hood angle", turretSys.getCurrentHoodAngleRad());
-		SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
-		// indexer info
-		SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
-		SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
+		// SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
 		SmartDashboard.putNumber("hood Offset", turretSys.getHoodOffsetDeg());
+		// indexer info
+		// SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
+		// SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
+		
 
 		// intake info
-		SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
-		SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
-		SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());
+		// SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
+		// SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
+		//SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());
 
 		// climber info
 

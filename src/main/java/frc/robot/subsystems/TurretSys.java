@@ -173,7 +173,7 @@ public class TurretSys extends SubsystemBase {
     } else {
       leftFlyWheelMtr.stopMotor();
       rightFlyWheelMtr.stopMotor();
-      setHoodAngle(manualHoodAngle);//CHANGEBACKTO...0.0
+      setHoodAngle(manualHoodAngle); //CHANGE BACK TO 0.0 AFTER RETUNING HOOD
     }
   }
 
