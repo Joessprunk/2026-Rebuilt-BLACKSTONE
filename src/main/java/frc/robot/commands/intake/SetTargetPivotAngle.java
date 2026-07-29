@@ -12,6 +12,7 @@ public class SetTargetPivotAngle extends Command {
   
   private final IntakeSys intakeSys;
   private double targetAngle;
+  
   public SetTargetPivotAngle(IntakeSys intakeSys, double targetAngle) {
     this.intakeSys = intakeSys;
     this.targetAngle = targetAngle;

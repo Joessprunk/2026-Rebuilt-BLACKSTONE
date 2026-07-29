@@ -57,28 +57,28 @@ public final class Constants {
         public static final int pigeonID = 14;
 
         public static final int frModuleCANCoderID = 2;
-        public static final int frModuleDriveMtrID = 6;  //dead
-        public static final int frModuleSteerMtrID = 10; //dead
+        public static final int frModuleDriveMtrID = 6;  
+        public static final int frModuleSteerMtrID = 10; 
 
         public static final int brModuleCANCoderID = 3;
         public static final int brModuleDriveMtrID = 7;
         public static final int brModuleSteerMtrID = 11;
 
         public static final int flModuleCANCoderID = 4;
-        public static final int flModuleDriveMtrID = 8; //dead
-        public static final int flModuleSteerMtrID = 12;//dead
+        public static final int flModuleDriveMtrID = 8; 
+        public static final int flModuleSteerMtrID = 12;
 
         public static final int blModuleCANCoderID = 5; 
-        public static final int blModuleDriveMtrID = 9; //dead
+        public static final int blModuleDriveMtrID = 9; 
         
         public static final int blModuleSteerMtrID = 13;
 
-        public static final int intakePivotMtrID = 15; //dead
-        public static final int leftRollerMtrID = 16;  //dead
-        public static final int rightRollerMtrID = 17;//dead
+        public static final int intakePivotMtrID = 15; 
+        public static final int leftRollerMtrID = 16;  
+        public static final int rightRollerMtrID = 17;
 
         public static final int towerRollerMtrID = 19;
-        public static final int leftFloorRollerMtrID = 20;//good
+        public static final int leftFloorRollerMtrID = 20;
         public static final int rightFloorRollerMtrID = 21;
 
         public static final int leftFlyWheelMtrID = 23;
@@ -208,10 +208,10 @@ public final class Constants {
         public static final double rollerVelocityConversionFactor = 1.0;
 
         public static final double intakePivotMinAngle = -10.0;
-        public static final double intakePivotMaxAngle = 170.0;
+        public static final double intakePivotMaxAngle = 185.0;
 
-        public static final double intakingPivotAngle = 130.0;
-        public static final double PivotBufferPositionAngle = 67.0;//40.0;
+        public static final double intakingPivotAngle = 170.0;
+        public static final double PivotBufferPositionAngle = 40.0;//40.0;
 
         public static final double intakePivotP = 0.025; // 0.01;
         public static final double intakePivotD = 0.0; 
@@ -241,22 +241,28 @@ public final class Constants {
         
         public static final int maxFlyWheelCurrentAmps = 75;
 
-        public static final double flywheelkP = 0.002;//0.00021;// 0.0003
-        public static final double flywheelkD = 0.001;
-        public static final double flywheelkS = 0.3; // increment voltage setpoint until the flywheel moves to find this
+        // public static final double flywheelkP = 0.002;//0.00021;// 0.0003
+        // public static final double flywheelkD = 0.001;
+        // public static final double flywheelkS = 0.3; // increment voltage setpoint until the flywheel moves to find this
+        //                                              // value
+        // public static final double flywheelkV = 0.00177;// 0.00215; // calculated from ReCalc
+
+         public static final double flywheelkP = 0.0001;//0.00021;// 0.0003
+        public static final double flywheelkD = 0.000;
+        public static final double flywheelkS = 0.24; // increment voltage setpoint until the flywheel moves to find this
                                                      // value
-        public static final double flywheelkV = 0.00177;// 0.00215; // calculated from ReCalc
+        public static final double flywheelkV = 0.00255;// 0.00215; // calculated from ReCalc
         
         public static final double azimuthErrorToleranceDeg = 0.25;
         public static final double HoodDefaultSetpointDeg = 0.0;
-        public static final double HoodOffsetIncrementDeg = 0.5;
+        public static final double HoodOffsetIncrementDeg = 0.1;
 
-        public static final double flyWheelPositionConversionFactorRot = 1.0;
-        public static final double flyWheelVelocityConversionFactorRPM = 1.0;
+        public static final double flyWheelPositionConversionFactorRot = 28.0/40.0;
+        public static final double flyWheelVelocityConversionFactorRPM = 28.0/40.0;
 
-        public static final double zerothDegreeFitConstant = 1570.0;
-        public static final double firstDegreeFitConstant = 170.0;
-        public static final double secondDegreeFitConstant = 5.95;
+        public static final double zerothDegreeFitConstant = 1130.0;
+        public static final double firstDegreeFitConstant = 512.0;
+        public static final double secondDegreeFitConstant = -64.0;
 
         public static final double flywheelOffsetRPMIncrement = 10.0;
 
@@ -281,16 +287,16 @@ public final class Constants {
         public static final int maxHoodCurrentAmps = 20;
         public static final double maximumHoodAngleDeg = 40.0;
         public static final double minimumHoodAngleDeg = -4.0;
-        public static final double hoodkP= 2.0;//1.015;
-        public static final double hoodkD = 0.3;
+        public static final double hoodkP= 1.4;//1.015;
+        public static final double hoodkD = 0.0;//0.3;
         public static final double hoodkS = 0.0;//0.2;
         public static final double hoodkG = 0.0;//0.01;
         public static final double hoodDefaultSetpointAngleDeg = 0.0;
 
 
-        public static final double hoodZerothDegreeFitConstant = -5.8;
-        public static final double hoodFirstDegreeFitConstant = 5.79;
-        public static final double hoodSecondDegreeFitConstant = -0.382;
+        public static final double hoodZerothDegreeFitConstant = -13.3;
+        public static final double hoodFirstDegreeFitConstant = 12.1;
+        public static final double hoodSecondDegreeFitConstant = -1.59;
     }
 
     
@@ -304,10 +310,10 @@ public final class Constants {
         public static final double towerRollerkS = 0.2;
         public static final double towerRollerkV = 0.0088;
 
-        public static final double FloorRollerP = 0.000;
+        public static final double FloorRollerP = 0.1;
         public static final double FloorRollerD = 0.000;
-        public static final double FloorRollerkS = 0.3;
-        public static final double FloorRollerkV = 0.0089;
+        public static final double FloorRollerkS = 0.0;//0.3;
+        public static final double FloorRollerkV = 0.0;//0.0089;
 
         public static final double towerRollerPositionConversionFactor = 1.0 / 5.0;
         public static final double towerRollerVelocityConversionFactor = 1.0 / 5.0 ;

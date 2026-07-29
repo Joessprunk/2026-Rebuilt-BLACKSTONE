@@ -25,15 +25,15 @@ public class StartManualShooting extends SequentialCommandGroup {
   public StartManualShooting(TurretSys turretSys, IndexerSys indexerSys, IntakeSys intakeSys) {
     super(
         // new LockCmd(swerveSys),
-        new SetManualFlywheelRPM(turretSys, 2020),
-        new SetManualHoodAngle(turretSys, 6.0),
+        new SetManualFlywheelRPM(turretSys, 2000),//2020
+        new SetManualHoodAngle(turretSys, 0.0),
         new WaitUntilCommand(() -> turretSys.isAtManualSpeed()),
 
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
         new WaitCommand(1.5), // 2.0 works idk why others dont...
-        new SetTargetPivotAngle(intakeSys, 10)
+        new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle)
 
     );
   }

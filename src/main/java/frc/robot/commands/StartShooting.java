@@ -31,7 +31,7 @@ public class StartShooting extends SequentialCommandGroup {
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
         new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        new WaitCommand(1.0),
+        new WaitCommand(2.25),
         new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle));
   }
 }

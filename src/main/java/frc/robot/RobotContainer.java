@@ -23,10 +23,12 @@ import frc.robot.commands.drive.AutoAimDrive;
 import frc.robot.commands.drive.AutoPassDrive;
 import frc.robot.commands.drive.LockCmd;
 import frc.robot.commands.intake.ResetPivotAngle;
+import frc.robot.commands.intake.SetIntakeRollerRPM;
 import frc.robot.commands.intake.SetTargetPivotAngle;
 import frc.robot.commands.turret.DecrementHoodOffset;
 import frc.robot.commands.turret.DecrementFlywheelOffset;
 import frc.robot.commands.turret.IncrementHoodOffset;
+import frc.robot.commands.turret.SetManualFlywheelRPM;
 import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.commands.turret.IncrementFlywheelOffset;
 import frc.robot.subsystems.IndexerSys;
@@ -205,8 +207,6 @@ public class RobotContainer {
 		// driverController.a().onTrue(new SetTargetPivotAngle(intakeSys,
 		// IntakeConstants.intakingPivotAngle));
 
-		// driverController.x().onTrue(new AimToHubCmd(swerveDrive, poseEstimator));
-		// driverController.y().onTrue(new AimToPassCmd(swerveDrive, poseEstimator));
 
 		// for tuning
 		// driverController.povUp().onTrue(new IncrementFlywheelOffset(turretSys));
@@ -220,7 +220,11 @@ public class RobotContainer {
 		operatorController.povRight().onTrue(new IncrementHoodOffset(turretSys));
 		operatorController.povLeft().onTrue(new DecrementHoodOffset(turretSys));
 
-		operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
+		operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 40));
+		operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
+
+		operatorController.x().onTrue(new SetIntakeRollerRPM(intakeSys, -1000));
+		//operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
 
 		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
 		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
@@ -230,10 +234,6 @@ public class RobotContainer {
 				.axisGreaterThan(XboxController.Axis.kRightTrigger.value, ControllerConstants.triggerPressedThreshold)
 				.onTrue(new StartManualShooting(turretSys, indexerSys, intakeSys))
 				.onFalse(new StopManualShooting(turretSys, indexerSys, intakeSys));
-
-		// operatorController.y().onTrue(new ToggleIsPassing(turretSys));
-
-		// operatorController.start().onTrue(new ToggleIsPassing(turretSys));
 
 		// operatorController
 
@@ -251,15 +251,15 @@ public class RobotContainer {
 
 		// flywheel RPM control bindings for testing
 		// operatorController.x().onTrue(new SetManualFlywheelRPM(turretSys, 0.0));
-		// operatorController.b().onTrue(new SetManualFlywheelRPM(turretSys, 2500.0));
+		// operatorController.b().onTrue(new SetManualFlywheelRPM(turretSys, 1000.0));
 		// operatorController.a().onTrue(new SetManualFlywheelRPM(turretSys, 2000.0));
 		// operatorController.y().onTrue(new SetManualFlywheelRPM(turretSys, 3000.0));
 
 		// hood angle control bindings for testing
-		operatorController.x().onTrue(new SetManualHoodAngle(turretSys, 0.0));
-		operatorController.b().onTrue(new SetManualHoodAngle(turretSys, 20.0));
-		operatorController.a().onTrue(new SetManualHoodAngle(turretSys, 10.0));
-		operatorController.y().onTrue(new SetManualHoodAngle(turretSys, 30.0));
+		// operatorController.x().onTrue(new SetManualHoodAngle(turretSys, 0.0));
+		// operatorController.b().onTrue(new SetManualHoodAngle(turretSys, 20.0));
+		// operatorController.a().onTrue(new SetManualHoodAngle(turretSys, 10.0));
+		// operatorController.y().onTrue(new SetManualHoodAngle(turretSys, 30.0));
 
 		// Indexer RPM control bindings for testing
 		// operatorController.a().onTrue(new SetTowerRollerRPM(indexerSys, 100.0));
@@ -281,10 +281,10 @@ public class RobotContainer {
 		// operatorController.a().onTrue(new SetIntakeRollerRPM(intakeSys, 500.0));
 
 		// // intake pivot position control bindings for testing
-		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 50.0));
+		// operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
 		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 80.0));
-		// operatorController.x().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
-		// operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,120.0));
+		//  operatorController.x().onTrue(new SetTargetPivotAngle(intakeSys, 0.0));
+		//  operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys,165.0));
 		// operatorController.start().onTrue(new ResetPivotAngle(intakeSys));
 
 	}
@@ -337,14 +337,16 @@ public class RobotContainer {
 		SmartDashboard.putNumber("flywheel offset RPM", turretSys.getFlywheelOffsetRPM());
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
 		SmartDashboard.putNumber("current hood angle", turretSys.getCurrentHoodAngleRad());
-		// SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
+		SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
 		SmartDashboard.putNumber("hood Offset", turretSys.getHoodOffsetDeg());
 		// indexer info
 		// SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
-		// SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
+		 SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
 		
 
 		// intake info
+		SmartDashboard.putNumber("intake pivot angle",intakeSys.getPivotAngle());
+		SmartDashboard.putNumber("Intake Pivot Current", intakeSys.getPivotCurrent());
 		// SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
 		// SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
 		//SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());

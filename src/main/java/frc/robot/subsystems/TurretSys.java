@@ -46,7 +46,7 @@ public class TurretSys extends SubsystemBase {
   private double HoodOffsetDeg = 0.0;
   // private final SysIdRoutine sysIdRoutine;
   private Field2d field = new Field2d();
-
+  
   @SuppressWarnings("removal")
   public TurretSys(PoseEstimator poseEstimator) {
 
@@ -173,7 +173,7 @@ public class TurretSys extends SubsystemBase {
     } else {
       leftFlyWheelMtr.stopMotor();
       rightFlyWheelMtr.stopMotor();
-      setHoodAngle(manualHoodAngle); //CHANGE BACK TO 0.0 AFTER RETUNING HOOD
+      setHoodAngle(1.0); //CHANGE BACK TO 0.0 AFTER RETUNING HOOD
     }
   }
 

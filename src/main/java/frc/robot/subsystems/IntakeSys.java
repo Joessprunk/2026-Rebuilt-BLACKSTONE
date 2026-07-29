@@ -30,7 +30,7 @@ public class IntakeSys extends SubsystemBase {
   private final RelativeEncoder rightRollerEnc;
   private final RelativeEncoder intakePivotEnc;
 
-  private final ProfiledPIDController intakePivotPID;
+  private final SparkClosedLoopController intakePivotPID;
   //private final SparkClosedLoopController intakePivotPID;
   private final SparkClosedLoopController leftRollerPID;
   private final SparkClosedLoopController rightRollerPID;
@@ -42,8 +42,7 @@ public class IntakeSys extends SubsystemBase {
     intakePivotMtr = new SparkFlex(CANDevices.intakePivotMtrID, MotorType.kBrushless);
     SparkFlexConfig intakePivotMtrSparkFlexConfig = new SparkFlexConfig();
     //intakePivotPID = intakePivotMtr.getClosedLoopController();
-     intakePivotPID = new ProfiledPIDController(IntakeConstants.intakePivotP, 0.0, IntakeConstants.intakePivotD, 
-     new TrapezoidProfile.Constraints(IntakeConstants.pivotMaxVelocityDegreesPerSec, IntakeConstants.pivotMaxAccelDegreesPerSec));
+     intakePivotPID = intakePivotMtr.getClosedLoopController();
     intakePivotEnc = intakePivotMtr.getEncoder();
 
    
@@ -59,8 +58,8 @@ public class IntakeSys extends SubsystemBase {
     rightRollerEnc = rightRollerMtr.getEncoder();
 
     intakePivotMtrSparkFlexConfig.inverted(true);
-    leftRollerMtrSparkFlexConfig.inverted(false);
-    rightRollerMtrSparkFlexConfig.inverted(true);
+    leftRollerMtrSparkFlexConfig.inverted(true);
+    rightRollerMtrSparkFlexConfig.inverted(false);
 
     intakePivotMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kBrake);
     leftRollerMtrSparkFlexConfig.idleMode(com.revrobotics.spark.config.SparkBaseConfig.IdleMode.kCoast);
@@ -133,16 +132,16 @@ public class IntakeSys extends SubsystemBase {
   }
 
   public void periodic() {
-     if(DriverStation.isDisabled()){
-      //intakePivotPID.setGoal(getPivotAngle());
-      intakePivotPID.reset(getPivotAngle());
-     }else{
-     intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
-     }
+    //  if(DriverStation.isDisabled()){
+    //   //intakePivotPID.setGoal(getPivotAngle());
+    //   intakePivotPID.reset(getPivotAngle());
+    //  }else{
+    //  intakePivotMtr.set(intakePivotPID.calculate(getPivotAngle()));
+    //  }
   }
 
   public void setTargetPivotAngle(double targetAngle) {
-      intakePivotPID.setGoal(targetAngle);
+      intakePivotPID.setSetpoint(targetAngle, ControlType.kPosition);
       //intakePivotPID.setSetpoint(targetAngle, ControlType.kPosition);
   }
 
