@@ -11,6 +11,7 @@ import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
@@ -28,9 +29,17 @@ public class StartVomiting extends SequentialCommandGroup {
         new WaitCommand(0.1),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerVomitingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerVomitingRPM),
-        new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerVomitingRPM),
+        //new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerVomitingRPM),
         new WaitCommand(0.1), // 2.0 works idk why others dont...
-        new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle)
+        new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
 
     );
   }

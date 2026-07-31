@@ -12,6 +12,7 @@ import frc.robot.commands.turret.SetManualHoodAngle;
 import frc.robot.subsystems.IndexerSys;
 import frc.robot.subsystems.IntakeSys;
 import frc.robot.subsystems.TurretSys;
+import frc.robot.Constants;
 import frc.robot.Constants.IndexerConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.commands.indexer.SetFloorRollerRPM;
@@ -28,13 +29,18 @@ public class StartManualShooting extends SequentialCommandGroup {
         new SetManualFlywheelRPM(turretSys, 2000),//2020
         new SetManualHoodAngle(turretSys, 0.0),
         new WaitUntilCommand(() -> turretSys.isAtManualSpeed()),
-
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
-        new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        new WaitCommand(1.5), // 2.0 works idk why others dont...
-        new SetTargetPivotAngle(intakeSys, IntakeConstants.PivotBufferPositionAngle)
-
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle)
     );
   }
 }

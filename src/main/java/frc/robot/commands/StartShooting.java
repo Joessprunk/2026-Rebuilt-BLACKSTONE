@@ -30,8 +30,16 @@ public class StartShooting extends SequentialCommandGroup {
         new WaitUntilCommand(() -> turretSys.isAtSpeed()),
         new SetTowerRollerRPM(indexerSys, IndexerConstants.towerRollerShootingRPM),
         new SetFloorRollerRPM(indexerSys, IndexerConstants.floorRollerShootingRPM),
-        new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
-        new WaitCommand(2.25),
+        //new SetIntakeRollerRPM(intakeSys, IntakeConstants.RollerShootingRPM),
+        new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+         new WaitCommand(1.0),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle),
+        new WaitCommand(0.5),
+        new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.intakingPivotAngle),
+        new WaitCommand(1.0),
         new SetTargetPivotAngle(intakeSys, Constants.IntakeConstants.PivotBufferPositionAngle));
   }
 }

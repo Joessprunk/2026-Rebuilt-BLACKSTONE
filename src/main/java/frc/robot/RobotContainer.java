@@ -223,7 +223,9 @@ public class RobotContainer {
 		operatorController.a().onTrue(new SetTargetPivotAngle(intakeSys, 40));
 		operatorController.y().onTrue(new SetTargetPivotAngle(intakeSys, IntakeConstants.intakingPivotAngle));
 
-		operatorController.x().onTrue(new SetIntakeRollerRPM(intakeSys, -1000));
+		operatorController.axisGreaterThan(XboxController.Axis.kLeftTrigger.value, ControllerConstants.triggerPressedThreshold)
+		.onTrue(new SetIntakeRollerRPM(intakeSys, -1000))
+		.onFalse(new SetIntakeRollerRPM(intakeSys, 0));
 		//operatorController.back().onTrue(new ResetPivotAngle(intakeSys));
 
 		// operatorController.b().onTrue(new SetTargetPivotAngle(intakeSys, 40.0));
@@ -337,16 +339,16 @@ public class RobotContainer {
 		SmartDashboard.putNumber("flywheel offset RPM", turretSys.getFlywheelOffsetRPM());
 		SmartDashboard.putBoolean("is at RPM", turretSys.isAtSpeed());
 		SmartDashboard.putNumber("current hood angle", turretSys.getCurrentHoodAngleRad());
-		SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
+		//SmartDashboard.putNumber("Hood Motor Current", turretSys.getHoodMotorCurrent());
 		SmartDashboard.putNumber("hood Offset", turretSys.getHoodOffsetDeg());
 		// indexer info
 		// SmartDashboard.putNumber("tower RPM", indexerSys.getTowerRollerRPM());
-		 SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
+		//SmartDashboard.putNumber("floor RPM", indexerSys.getFloorRollerRPM());
 		
 
 		// intake info
 		SmartDashboard.putNumber("intake pivot angle",intakeSys.getPivotAngle());
-		SmartDashboard.putNumber("Intake Pivot Current", intakeSys.getPivotCurrent());
+		//SmartDashboard.putNumber("Intake Pivot Current", intakeSys.getPivotCurrent());
 		// SmartDashboard.putNumber("actuator position angle", intakeSys.getPivotAngle());
 		// SmartDashboard.putNumber("roller RPM", intakeSys.getRollerRPM());
 		//SmartDashboard.putNumber("pivot motor current", intakeSys.getPivotCurrent());
